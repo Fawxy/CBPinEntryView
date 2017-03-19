@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'CBPinEntryView_Example' do
+  pod 'CBPinEntryView', :path => '../'
+
+  target 'CBPinEntryView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

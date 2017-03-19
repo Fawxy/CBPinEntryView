@@ -1,0 +1,6 @@
+framework module CBPinEntryView {
+  umbrella header "CBPinEntryView-umbrella.h"
+
+  export *
+  module * { export * }
+}
