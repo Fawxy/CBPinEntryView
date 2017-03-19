@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CBPinEntryView'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of CBPinEntryView.'
+  s.version          = '1.0.0'
+  s.summary          = 'A view for entering arbitrary length numerical pins or codes written in Swift 3.0.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,15 +18,15 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+This view allows a user to enter a pin or code (for security/mobile verification etc) of any length. It allows deletion, continuation and allows you to get the entire entered code as a single String or Int without having to join Strings from multiple text fields. It's fast, looks nice (I think) and is customisable! Requires iOS 9+.
                        DESC
 
-  s.homepage         = 'https://github.com/Chris Byatt/CBPinEntryView'
+  s.homepage         = 'https://github.com/Fawxy/CBPinEntryView'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Chris Byatt' => 'byatt.chris@gmail.com' }
   s.source           = { :git => 'https://github.com/Chris Byatt/CBPinEntryView.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url = 'https://twitter.com/ChrisByatt'
 
   s.ios.deployment_target = '9.0'
 
