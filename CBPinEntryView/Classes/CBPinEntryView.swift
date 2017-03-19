@@ -18,6 +18,8 @@ open class CBPinEntryView: UIView {
     @IBInspectable var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
     @IBInspectable var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
 
+    @IBInspectable var entryFont: UIFont = CBPinEntryViewDefaults.entryFont
+
     private var stackView: UIStackView?
     private var textField: UITextField!
 
@@ -73,9 +75,10 @@ open class CBPinEntryView: UIView {
             let button = UIButton()
             button.backgroundColor = UIColor.white
             button.setTitleColor(entryTextColour, for: .normal)
+            button.titleLabel!.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = CBPinEntryViewDefaults.entryBorderColour.cgColor
+            button.layer.borderColor = entryBorderColour
             button.layer.borderWidth = 0.0
 
             button.tag = i + 1

@@ -24,4 +24,7 @@ struct CBPinEntryViewDefaults {
 
     // Default text colour for the entry label
     static let entryTextColour: UIColor = UIColor.darkText
+
+    // Default font for entry fields
+    static let entryFont: UIFont = UIFont.systemFont(ofSize: 16)
 }
