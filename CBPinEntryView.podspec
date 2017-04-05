@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CBPinEntryView'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'A view for entering arbitrary length numerical pins or codes written in Swift 3.0.'
 
 # This description is used to generate tags and improve search results.
@@ -22,7 +22,6 @@ This view allows a user to enter a pin or code (for security/mobile verification
                        DESC
 
   s.homepage         = 'https://github.com/Fawxy/CBPinEntryView'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Chris Byatt' => 'byatt.chris@gmail.com' }
   s.source           = { :git => 'https://github.com/Fawxy/CBPinEntryView.git', :tag => s.version.to_s }
@@ -31,12 +30,4 @@ This view allows a user to enter a pin or code (for security/mobile verification
   s.ios.deployment_target = '9.0'
 
   s.source_files = 'CBPinEntryView/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'CBPinEntryView' => ['CBPinEntryView/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
