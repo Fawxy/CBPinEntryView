@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,13 +37,48 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="l00-Oi-KOV">
+                                <rect key="frame" x="100" y="192" width="120" height="20.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="String output:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xwt-zJ-aIh">
+                                        <rect key="frame" x="0.0" y="0.0" width="105.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pjq-79-3tQ">
+                                        <rect key="frame" x="109.5" y="0.0" width="10.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20.5" id="nhp-MU-3Hy"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e7G-Qq-ufL">
+                                <rect key="frame" x="141" y="252.5" width="38" height="30"/>
+                                <state key="normal" title="Press"/>
+                                <connections>
+                                    <action selector="pressedButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ohr-U9-pHP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.94509803920000002" green="0.96078431369999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="l00-Oi-KOV" firstAttribute="top" secondItem="8mn-8t-3Ic" secondAttribute="bottom" constant="30" id="Fto-dd-m9g"/>
                             <constraint firstItem="8mn-8t-3Ic" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" multiplier="0.5" id="e15-Jp-UgT"/>
+                            <constraint firstItem="l00-Oi-KOV" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="g8I-HD-8da"/>
+                            <constraint firstItem="e7G-Qq-ufL" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="hkh-Ok-IeY"/>
                             <constraint firstItem="8mn-8t-3Ic" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="kSo-Zi-uTG"/>
+                            <constraint firstItem="e7G-Qq-ufL" firstAttribute="top" secondItem="l00-Oi-KOV" secondAttribute="bottom" constant="40" id="rQd-Pj-ZOf"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="pinEntryView" destination="8mn-8t-3Ic" id="1gi-9O-nO0"/>
+                        <outlet property="stringOutputLabel" destination="pjq-79-3tQ" id="3UZ-tJ-wlZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

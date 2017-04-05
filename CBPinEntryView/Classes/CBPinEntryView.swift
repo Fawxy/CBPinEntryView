@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class CBPinEntryView: UIView {
+@IBDesignable open class CBPinEntryView: UIView {
 
     @IBInspectable var length: Int = CBPinEntryViewDefaults.length
 
@@ -28,8 +28,7 @@ open class CBPinEntryView: UIView {
     override public init(frame: CGRect) {
         super.init(frame: frame)
 
-        setup()
-        self.frame.size = intrinsicContentSize
+        commonInit()
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -39,11 +38,15 @@ open class CBPinEntryView: UIView {
     override open func awakeFromNib() {
         super.awakeFromNib()
 
-        setup()
+        commonInit()
+    }
+
+    override open func prepareForInterfaceBuilder() {
+        commonInit()
     }
 
 
-    private func setup() {
+    private func commonInit() {
         setupStackView()
         setupTextField()
 
@@ -104,8 +107,12 @@ open class CBPinEntryView: UIView {
         textField.becomeFirstResponder()
     }
 
-    open func getPinAsInt() -> Int {
-        return Int(textField.text!)!
+    open func getPinAsInt() -> Int? {
+        if let intOutput = Int(textField.text!) {
+            return intOutput
+        }
+
+        return nil
     }
 
     open func getPinAsString() -> String {
