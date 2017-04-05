@@ -22,6 +22,8 @@ pod "CBPinEntryView"
 ```
 Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. Create an outlet in your file and customise either with the IBInspectable properties or in your code.
 
+Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
+
 ## Author
 
 Chris Byatt, byatt.chris@gmail.com
