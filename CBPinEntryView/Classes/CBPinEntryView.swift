@@ -13,7 +13,7 @@ import UIKit
     @IBInspectable var length: Int = CBPinEntryViewDefaults.length
 
     @IBInspectable var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
-    @IBInspectable var entryBorderColour: CGColor = CBPinEntryViewDefaults.entryBorderColour.cgColor
+    @IBInspectable var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
 
     @IBInspectable var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
     @IBInspectable var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
@@ -81,7 +81,7 @@ import UIKit
             button.titleLabel!.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryBorderColour
+            button.layer.borderColor = entryBorderColour.cgColor
             button.layer.borderWidth = 0.0
 
             button.tag = i + 1
