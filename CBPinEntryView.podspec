@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CBPinEntryView'
-  s.version          = '1.0.3'
+  s.version          = '1.1.0'
   s.summary          = 'A view for entering arbitrary length numerical pins or codes written in Swift 3.0.'
 
 # This description is used to generate tags and improve search results.

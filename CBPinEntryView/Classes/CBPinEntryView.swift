@@ -13,7 +13,10 @@ import UIKit
     @IBInspectable var length: Int = CBPinEntryViewDefaults.length
 
     @IBInspectable var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
+
+    @IBInspectable var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth
     @IBInspectable var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
+    @IBInspectable var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
 
     @IBInspectable var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
     @IBInspectable var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
@@ -22,6 +25,8 @@ import UIKit
 
     private var stackView: UIStackView?
     private var textField: UITextField!
+
+    fileprivate var errorMode: Bool = false
 
     fileprivate var entryButtons: [UIButton] = [UIButton]()
 
@@ -93,10 +98,13 @@ import UIKit
         }
     }
 
-    @objc func didPressCodeButton(_ sender: UIButton) {
+    @objc private func didPressCodeButton(_ sender: UIButton) {
+        errorMode = false
+        
         let entryIndex = textField.text!.characters.count + 1
-
         for button in entryButtons {
+            button.layer.borderColor = entryBorderColour.cgColor
+
             if button.tag == entryIndex {
                 button.layer.borderWidth = 1
             } else {
@@ -105,6 +113,21 @@ import UIKit
         }
         
         textField.becomeFirstResponder()
+    }
+
+    open func toggleError() {
+        if !errorMode {
+            for button in entryButtons {
+                button.layer.borderColor = entryErrorBorderColour.cgColor
+                button.layer.borderWidth = entryBorderWidth
+            }
+        } else {
+            for button in entryButtons {
+                button.layer.borderColor = entryBorderColour.cgColor
+            }
+        }
+
+        errorMode = !errorMode
     }
 
     open func getPinAsInt() -> Int? {
@@ -122,6 +145,11 @@ import UIKit
 
 extension CBPinEntryView: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        errorMode = false
+        for button in entryButtons {
+            button.layer.borderColor = entryBorderColour.cgColor
+        }
+
         let deleting = (range.location == textField.text!.characters.count - 1 && range.length == 1 && string == "")
 
         if string.characters.count > 0 && !Scanner(string: string).scanInt(nil) {
@@ -142,15 +170,15 @@ extension CBPinEntryView: UITextFieldDelegate {
                     button.setTitle(string, for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else if button.tag == newLength + 1 {
-                    button.layer.borderWidth = 1
+                    button.layer.borderWidth = entryBorderWidth
                 } else {
-                    button.layer.borderWidth = 0
+                    button.layer.borderWidth = 0.0
                 }
             }
         } else {
             for button in entryButtons {
                 if button.tag == oldLength {
-                    button.layer.borderWidth = 1
+                    button.layer.borderWidth = entryBorderWidth
                     UIView.setAnimationsEnabled(false)
                     button.setTitle("", for: .normal)
                     UIView.setAnimationsEnabled(true)
@@ -160,6 +188,6 @@ extension CBPinEntryView: UITextFieldDelegate {
             }
         }
 
-        return newLength <= 5
+        return newLength <= length
     }
 }

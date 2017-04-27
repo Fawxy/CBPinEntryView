@@ -16,8 +16,14 @@ struct CBPinEntryViewDefaults {
     // Default backgorund colour of pin entry field
     static let entryBackgroundColour: UIColor = UIColor.white
 
+    // Default border width
+    static let entryBorderWidth: CGFloat = 1
+
     // Default border colour of currently editing field
     static let entryBorderColour: UIColor = UIColor(red: 69/255, green: 78/255, blue: 86/255, alpha: 1.0)
+
+    // Default border colour for error state
+    static let entryErrorColour: UIColor = UIColor.red
 
     // Default corner radius of entry fields
     static let entryCornerRadius: CGFloat = 3.0
