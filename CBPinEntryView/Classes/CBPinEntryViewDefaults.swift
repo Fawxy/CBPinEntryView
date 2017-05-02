@@ -19,6 +19,9 @@ struct CBPinEntryViewDefaults {
     // Default border width
     static let entryBorderWidth: CGFloat = 1
 
+    // Default border colour of fields before selection
+    static let entryDefaultBorderColour: UIColor = UIColor.clear
+
     // Default border colour of currently editing field
     static let entryBorderColour: UIColor = UIColor(red: 69/255, green: 78/255, blue: 86/255, alpha: 1.0)
 

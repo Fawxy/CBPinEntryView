@@ -15,6 +15,7 @@ import UIKit
     @IBInspectable var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
 
     @IBInspectable var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth
+    @IBInspectable var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour
     @IBInspectable var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
     @IBInspectable var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
 
@@ -86,8 +87,8 @@ import UIKit
             button.titleLabel!.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryBorderColour.cgColor
-            button.layer.borderWidth = 0.0
+            button.layer.borderColor = entryDefaultBorderColour.cgColor
+            button.layer.borderWidth = entryBorderWidth
 
             button.tag = i + 1
 
@@ -106,9 +107,9 @@ import UIKit
             button.layer.borderColor = entryBorderColour.cgColor
 
             if button.tag == entryIndex {
-                button.layer.borderWidth = 1
+                button.layer.borderColor = entryBorderColour.cgColor
             } else {
-                button.layer.borderWidth = 0
+                button.layer.borderColor = entryDefaultBorderColour.cgColor
             }
         }
         
@@ -165,25 +166,25 @@ extension CBPinEntryView: UITextFieldDelegate {
         if !deleting {
             for button in entryButtons {
                 if button.tag == newLength {
-                    button.layer.borderWidth = 0
+                    button.layer.borderColor = entryDefaultBorderColour.cgColor
                     UIView.setAnimationsEnabled(false)
                     button.setTitle(string, for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else if button.tag == newLength + 1 {
-                    button.layer.borderWidth = entryBorderWidth
+                    button.layer.borderColor = entryBorderColour.cgColor
                 } else {
-                    button.layer.borderWidth = 0.0
+                    button.layer.borderColor = entryDefaultBorderColour.cgColor
                 }
             }
         } else {
             for button in entryButtons {
                 if button.tag == oldLength {
-                    button.layer.borderWidth = entryBorderWidth
+                    button.layer.borderColor = entryBorderColour.cgColor
                     UIView.setAnimationsEnabled(false)
                     button.setTitle("", for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else {
-                    button.layer.borderWidth = 0
+                    button.layer.borderColor = entryDefaultBorderColour.cgColor
                 }
             }
         }
