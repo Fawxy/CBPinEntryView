@@ -24,6 +24,8 @@ Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. C
 
 Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
 
+There is now also an error mode which can be toggled with `entryView.toggleError()`. It is automatically removed if the user taps on the field or starts typing again.
+
 ## Author
 
 Chris Byatt, byatt.chris@gmail.com
