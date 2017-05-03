@@ -8,6 +8,10 @@
 
 import UIKit
 
+public protocol CBPinEntryViewDelegate {
+    func entryChanged(_ completed: Bool)
+}
+
 @IBDesignable open class CBPinEntryView: UIView {
 
     @IBInspectable var length: Int = CBPinEntryViewDefaults.length
@@ -30,6 +34,8 @@ import UIKit
     fileprivate var errorMode: Bool = false
 
     fileprivate var entryButtons: [UIButton] = [UIButton]()
+
+    public var delegate: CBPinEntryViewDelegate?
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,6 +79,7 @@ import UIKit
         textField = UITextField(frame: bounds)
         textField.delegate = self
         textField.keyboardType = .numberPad
+        textField.addTarget(self, action: #selector(textfieldChanged(_:)), for: .editingChanged)
 
         self.addSubview(textField)
 
@@ -145,6 +152,11 @@ import UIKit
 }
 
 extension CBPinEntryView: UITextFieldDelegate {
+    func textfieldChanged(_ textField: UITextField) {
+        let complete: Bool = textField.text!.characters.count == length
+        delegate?.entryChanged(complete)
+    }
+
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         errorMode = false
         for button in entryButtons {

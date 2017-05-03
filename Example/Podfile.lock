@@ -1,5 +1,5 @@
 PODS:
-  - CBPinEntryView (0.1.0)
+  - CBPinEntryView (1.2.0)
 
 DEPENDENCIES:
   - CBPinEntryView (from `../`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CBPinEntryView: 105d35d5a9ab1836f6c87d336fafa7002aecf5d5
+  CBPinEntryView: 4598ecd231c29581d8bcc3e933bee2b866d829bd
 
 PODFILE CHECKSUM: 7a55927a68b2086774c487cb21b7cb4d074c5945
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.2.1
