@@ -14,19 +14,19 @@ public protocol CBPinEntryViewDelegate {
 
 @IBDesignable open class CBPinEntryView: UIView {
 
-    @IBInspectable var length: Int = CBPinEntryViewDefaults.length
+    @IBInspectable open var length: Int = CBPinEntryViewDefaults.length
 
-    @IBInspectable var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
+    @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
 
-    @IBInspectable var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth
-    @IBInspectable var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour
-    @IBInspectable var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
-    @IBInspectable var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
+    @IBInspectable open var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth
+    @IBInspectable open var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour
+    @IBInspectable open var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
+    @IBInspectable open var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
 
-    @IBInspectable var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
-    @IBInspectable var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
+    @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
+    @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
 
-    @IBInspectable var entryFont: UIFont = CBPinEntryViewDefaults.entryFont
+    @IBInspectable open var entryFont: UIFont = CBPinEntryViewDefaults.entryFont
 
     private var stackView: UIStackView?
     private var textField: UITextField!
