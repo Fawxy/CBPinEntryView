@@ -31,14 +31,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		115B04B847C1AADF80659B7333929651 /* Pods-CBPinEntryView_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CBPinEntryView_Example.modulemap"; sourceTree = "<group>"; };
+		115B04B847C1AADF80659B7333929651 /* Pods-CBPinEntryView_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CBPinEntryView_Example.modulemap"; sourceTree = "<group>"; };
 		1BD11DFB865FE2DF1321A909D105279B /* CBPinEntryViewDefaults.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CBPinEntryViewDefaults.swift; sourceTree = "<group>"; };
 		22C540ADF0B9825112FE99687CA177F6 /* Pods-CBPinEntryView_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CBPinEntryView_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		28841D339A5457619046656B0F125A35 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29835B3005E24F5C0F0622E991A3BD8E /* Pods-CBPinEntryView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CBPinEntryView_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		29E285A58ED9BE64A0CE9FE11701375C /* Pods-CBPinEntryView_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CBPinEntryView_Tests.modulemap"; sourceTree = "<group>"; };
+		29E285A58ED9BE64A0CE9FE11701375C /* Pods-CBPinEntryView_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CBPinEntryView_Tests.modulemap"; sourceTree = "<group>"; };
 		2E9A98AF1CD693C9E6810A0A7F6566EE /* CBPinEntryView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CBPinEntryView.xcconfig; sourceTree = "<group>"; };
-		30BB8E57AEF46E0A52450FAF7B648414 /* CBPinEntryView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = CBPinEntryView.modulemap; sourceTree = "<group>"; };
+		30BB8E57AEF46E0A52450FAF7B648414 /* CBPinEntryView.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = CBPinEntryView.modulemap; sourceTree = "<group>"; };
 		3923E6FAA5A8D3C5DBFBF97A71CCA5FB /* Pods-CBPinEntryView_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CBPinEntryView_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		3E606B1A853BE75542CF7E556412D145 /* Pods-CBPinEntryView_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CBPinEntryView_Example-resources.sh"; sourceTree = "<group>"; };
 		3E6C3571FDFE9C16E56F76F0E28063F6 /* Pods-CBPinEntryView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CBPinEntryView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -46,14 +46,14 @@
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		6DDB75D6DFC74675C11BACDC14BA4FFF /* Pods-CBPinEntryView_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CBPinEntryView_Tests-resources.sh"; sourceTree = "<group>"; };
 		785152BD98C41E5608624E909476156E /* Pods-CBPinEntryView_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CBPinEntryView_Example-frameworks.sh"; sourceTree = "<group>"; };
-		7FAC36C36A53AB288914EFE3F24FF978 /* Pods_CBPinEntryView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CBPinEntryView_Example.framework; path = "Pods-CBPinEntryView_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FAC36C36A53AB288914EFE3F24FF978 /* Pods_CBPinEntryView_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CBPinEntryView_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		840544FF262B7EFF99F1B78F3E9C754C /* Pods-CBPinEntryView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CBPinEntryView_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		8C32E04B668D92A8E95916F5DEA5AD3B /* Pods-CBPinEntryView_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CBPinEntryView_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A02F9F1921196CB1BD41E764ED01D4B1 /* Pods-CBPinEntryView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CBPinEntryView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A05FDE9049A8F8F0C749EAFED92850F7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A45726B15C4E5403605C7C3F19115734 /* CBPinEntryView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CBPinEntryView.framework; path = CBPinEntryView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6B4D9110689FFF0A9310AFB134AEEEC /* Pods_CBPinEntryView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CBPinEntryView_Tests.framework; path = "Pods-CBPinEntryView_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A45726B15C4E5403605C7C3F19115734 /* CBPinEntryView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CBPinEntryView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6B4D9110689FFF0A9310AFB134AEEEC /* Pods_CBPinEntryView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CBPinEntryView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A781DCFF6B879ACDA71E5B38B6C5FE93 /* Pods-CBPinEntryView_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CBPinEntryView_Tests-dummy.m"; sourceTree = "<group>"; };
 		C3585A3DC0E77804FC1802F3DE1137E0 /* CBPinEntryView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CBPinEntryView-umbrella.h"; sourceTree = "<group>"; };
 		C502BDA0BF73A56C0E98480B2E8F190C /* Pods-CBPinEntryView_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CBPinEntryView_Tests-frameworks.sh"; sourceTree = "<group>"; };
@@ -135,7 +135,6 @@
 			children = (
 				ADED1ED66F754D03DCF244445BECBA94 /* Classes */,
 			);
-			name = CBPinEntryView;
 			path = CBPinEntryView;
 			sourceTree = "<group>";
 		};
@@ -207,7 +206,6 @@
 				DBF16FA10D78AAFACDA2C898ECE8F627 /* CBPinEntryView.swift */,
 				1BD11DFB865FE2DF1321A909D105279B /* CBPinEntryViewDefaults.swift */,
 			);
-			name = Classes;
 			path = Classes;
 			sourceTree = "<group>";
 		};
