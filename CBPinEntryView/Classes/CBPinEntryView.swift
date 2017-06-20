@@ -68,7 +68,7 @@ public protocol CBPinEntryViewDelegate {
 
     @IBInspectable open var entryFont: UIFont = CBPinEntryViewDefaults.entryFont {
         didSet {
-            if oldValue != entryFont§ {
+            if oldValue != entryFont {
                 updateButtonStyles()
             }
         }
