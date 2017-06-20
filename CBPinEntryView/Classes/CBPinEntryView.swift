@@ -58,7 +58,7 @@ public protocol CBPinEntryViewDelegate {
         }
     }
 
-    @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour  {
+    @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour {
         didSet {
             if oldValue != entryTextColour {
                 updateButtonStyles()
@@ -66,7 +66,13 @@ public protocol CBPinEntryViewDelegate {
         }
     }
 
-    @IBInspectable open var entryFont: UIFont = CBPinEntryViewDefaults.entryFont
+    @IBInspectable open var entryFont: UIFont = CBPinEntryViewDefaults.entryFont {
+        didSet {
+            if oldValue != entryFont§ {
+                updateButtonStyles()
+            }
+        }
+    }
 
     private var stackView: UIStackView?
     private var textField: UITextField!
