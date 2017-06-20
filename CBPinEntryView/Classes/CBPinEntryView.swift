@@ -16,15 +16,55 @@ public protocol CBPinEntryViewDelegate {
 
     @IBInspectable open var length: Int = CBPinEntryViewDefaults.length
 
-    @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
+    @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius {
+        didSet {
+            if oldValue != entryCornerRadius {
+                updateButtonStyles()
+            }
+        }
+    }
 
-    @IBInspectable open var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth
-    @IBInspectable open var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour
-    @IBInspectable open var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
+    @IBInspectable open var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth {
+        didSet {
+            if oldValue != entryBorderWidth {
+                updateButtonStyles()
+            }
+        }
+    }
+
+    @IBInspectable open var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour {
+        didSet {
+            if oldValue != entryDefaultBorderColour {
+                updateButtonStyles()
+            }
+        }
+    }
+
+    @IBInspectable open var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour {
+        didSet {
+            if oldValue != entryBorderColour {
+                updateButtonStyles()
+            }
+        }
+    }
+
     @IBInspectable open var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
 
-    @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
-    @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
+    @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour {
+        didSet {
+            if oldValue != entryBackgroundColour {
+                updateButtonStyles()
+            }
+        }
+    }
+
+    @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour  {
+        didSet {
+            if oldValue != entryTextColour {
+                updateButtonStyles()
+            }
+        }
+    }
 
     @IBInspectable open var entryFont: UIFont = CBPinEntryViewDefaults.entryFont
 
@@ -89,9 +129,9 @@ public protocol CBPinEntryViewDelegate {
     private func createButtons() {
         for i in 0..<length {
             let button = UIButton()
-            button.backgroundColor = UIColor.white
+            button.backgroundColor = entryBackgroundColour
             button.setTitleColor(entryTextColour, for: .normal)
-            button.titleLabel!.font = entryFont
+            button.titleLabel?.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
             button.layer.borderColor = entryDefaultBorderColour.cgColor
@@ -103,6 +143,18 @@ public protocol CBPinEntryViewDelegate {
 
             entryButtons.append(button)
             stackView?.addArrangedSubview(button)
+        }
+    }
+
+    private func updateButtonStyles() {
+        for button in entryButtons {
+            button.backgroundColor = entryBackgroundColour
+            button.setTitleColor(entryTextColour, for: .normal)
+            button.titleLabel?.font = entryFont
+
+            button.layer.cornerRadius = entryCornerRadius
+            button.layer.borderColor = entryDefaultBorderColour.cgColor
+            button.layer.borderWidth = entryBorderWidth
         }
     }
 
