@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol CBPinEntryViewDelegate {
+public protocol CBPinEntryViewDelegate: class {
     func entryChanged(_ completed: Bool)
 }
 
@@ -81,7 +81,7 @@ public protocol CBPinEntryViewDelegate {
 
     fileprivate var entryButtons: [UIButton] = [UIButton]()
 
-    public var delegate: CBPinEntryViewDelegate?
+    public weak var delegate: CBPinEntryViewDelegate?
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
