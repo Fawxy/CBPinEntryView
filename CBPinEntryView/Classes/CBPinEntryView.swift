@@ -210,7 +210,7 @@ public protocol CBPinEntryViewDelegate {
 }
 
 extension CBPinEntryView: UITextFieldDelegate {
-    func textfieldChanged(_ textField: UITextField) {
+    @objc func textfieldChanged(_ textField: UITextField) {
         let complete: Bool = textField.text!.characters.count == length
         delegate?.entryChanged(complete)
     }
