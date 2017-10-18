@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CBPinEntryView'
-  s.version          = '1.3.4'
-  s.summary          = 'A view for entering arbitrary length numerical pins or codes written in Swift 3.0.'
+  s.version          = '1.4.0'
+  s.summary          = 'A view for entering arbitrary length numerical pins or codes written in Swift 4.0.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
