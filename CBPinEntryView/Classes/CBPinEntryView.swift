@@ -207,6 +207,16 @@ public protocol CBPinEntryViewDelegate {
     open func getPinAsString() -> String {
         return textField.text!
     }
+    
+    @discardableResult open override func becomeFirstResponder() -> Bool {
+        super.becomeFirstResponder()
+        
+        if let firstButton = entryButtons.first {
+            didPressCodeButton(firstButton)
+        }
+        
+        return true
+    }
 }
 
 extension CBPinEntryView: UITextFieldDelegate {
