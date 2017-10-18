@@ -217,6 +217,16 @@ public protocol CBPinEntryViewDelegate {
         
         return true
     }
+    
+    @discardableResult open override func resignFirstResponder() -> Bool {
+        super.resignFirstResponder()
+        
+        entryButtons.forEach {
+            $0.layer.borderColor = entryDefaultBorderColour.cgColor
+        }
+        
+        return textField.resignFirstResponder()
+    }
 }
 
 extension CBPinEntryView: UITextFieldDelegate {
