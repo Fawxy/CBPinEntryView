@@ -28,7 +28,8 @@ There is now also an error mode which can be toggled with `entryView.toggleError
 
 Customise keyboard type! The keyboard types are an enum with int raw values. Options are as follows:
 
-```0: default // Default type for the current input method.
+```
+0: default // Default type for the current input method.
 1: asciiCapable // Displays a keyboard which can enter ASCII characters
 2: numbersAndPunctuation // Numbers and assorted punctuation.
 3: URL // A type optimized for URL entry (shows . / .com prominently).
@@ -37,7 +38,8 @@ Customise keyboard type! The keyboard types are an enum with int raw values. Opt
 6: namePhonePad // A type optimized for entering a person's name or phone number.
 7: emailAddress // A type optimized for multiple email address entry (shows space @ . prominently).
 8: decimalPad // A number pad with a decimal point.
-9: twitter // A type optimized for twitter text entry (easy access to @ #)```
+9: twitter // A type optimized for twitter text entry (easy access to @ #)
+```
 
 ## Author
 
