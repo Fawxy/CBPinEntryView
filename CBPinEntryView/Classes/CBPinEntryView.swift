@@ -207,6 +207,26 @@ public protocol CBPinEntryViewDelegate: class {
     open func getPinAsString() -> String {
         return textField.text!
     }
+    
+    @discardableResult open override func becomeFirstResponder() -> Bool {
+        super.becomeFirstResponder()
+        
+        if let firstButton = entryButtons.first {
+            didPressCodeButton(firstButton)
+        }
+        
+        return true
+    }
+    
+    @discardableResult open override func resignFirstResponder() -> Bool {
+        super.resignFirstResponder()
+        
+        entryButtons.forEach {
+            $0.layer.borderColor = entryDefaultBorderColour.cgColor
+        }
+        
+        return textField.resignFirstResponder()
+    }
 }
 
 extension CBPinEntryView: UITextFieldDelegate {
