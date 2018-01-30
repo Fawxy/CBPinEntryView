@@ -173,7 +173,7 @@ public protocol CBPinEntryViewDelegate: class {
     @objc private func didPressCodeButton(_ sender: UIButton) {
         errorMode = false
         
-        let entryIndex = textField.text!.characters.count + 1
+        let entryIndex = textField.text!.count + 1
         for button in entryButtons {
             button.layer.borderColor = entryBorderColour.cgColor
 
@@ -237,7 +237,7 @@ public protocol CBPinEntryViewDelegate: class {
 
 extension CBPinEntryView: UITextFieldDelegate {
     @objc func textfieldChanged(_ textField: UITextField) {
-        let complete: Bool = textField.text!.characters.count == length
+        let complete: Bool = textField.text!.count == length
         delegate?.entryChanged(complete)
     }
 
@@ -247,14 +247,14 @@ extension CBPinEntryView: UITextFieldDelegate {
             button.layer.borderColor = entryBorderColour.cgColor
         }
 
-        let deleting = (range.location == textField.text!.characters.count - 1 && range.length == 1 && string == "")
+        let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
 
-        if string.characters.count > 0 && !Scanner(string: string).scanInt(nil) {
+        if string.count > 0 && !Scanner(string: string).scanInt(nil) {
             return false
         }
 
-        let oldLength = textField.text!.characters.count
-        let replacementLength = string.characters.count
+        let oldLength = textField.text!.count
+        let replacementLength = string.count
         let rangeLength = range.length
 
         let newLength = oldLength - rangeLength + replacementLength
