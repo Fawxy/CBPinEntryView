@@ -78,6 +78,8 @@ public protocol CBPinEntryViewDelegate: class {
 
     @IBInspectable open var secureCharacter: String = CBPinEntryViewDefaults.secureCharacter
 
+    @IBInspectable open var keyboardType: Int = CBPinEntryViewDefaults.keyboardType
+
     private var stackView: UIStackView?
     private var textField: UITextField!
 
@@ -134,7 +136,7 @@ public protocol CBPinEntryViewDelegate: class {
     private func setupTextField() {
         textField = UITextField(frame: bounds)
         textField.delegate = self
-        textField.keyboardType = .numberPad
+        textField.keyboardType = UIKeyboardType(rawValue: keyboardType) ?? .numberPad
         textField.addTarget(self, action: #selector(textfieldChanged(_:)), for: .editingChanged)
 
         self.addSubview(textField)

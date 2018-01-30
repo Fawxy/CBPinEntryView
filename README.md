@@ -22,9 +22,22 @@ pod "CBPinEntryView"
 ```
 Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. Create an outlet in your file and customise either with the IBInspectable properties or in your code.
 
-Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`. Secure entry with customisable secure character (change from ● to ✱ or any other character).
+Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`. Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
 
 There is now also an error mode which can be toggled with `entryView.toggleError()`. It is automatically removed if the user taps on the field or starts typing again.
+
+Customise keyboard type! The keyboard types are an enum with int raw values. Options are as follows:
+
+```0: default // Default type for the current input method.
+1: asciiCapable // Displays a keyboard which can enter ASCII characters
+2: numbersAndPunctuation // Numbers and assorted punctuation.
+3: URL // A type optimized for URL entry (shows . / .com prominently).
+4: numberPad // A number pad with locale-appropriate digits (0-9, ۰-۹, ०-९, etc.). Suitable for PIN entry.
+5: phonePad // A phone pad (1-9, *, 0, #, with letters under the numbers).
+6: namePhonePad // A type optimized for entering a person's name or phone number.
+7: emailAddress // A type optimized for multiple email address entry (shows space @ . prominently).
+8: decimalPad // A number pad with a decimal point.
+9: twitter // A type optimized for twitter text entry (easy access to @ #)```
 
 ## Author
 

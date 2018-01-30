@@ -40,4 +40,6 @@ struct CBPinEntryViewDefaults {
     static let isSecure: Bool = false
 
     static let secureCharacter: String = "●"
+
+    static let keyboardType: Int = 4
 }
