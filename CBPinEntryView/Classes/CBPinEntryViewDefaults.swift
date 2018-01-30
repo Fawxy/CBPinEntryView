@@ -36,4 +36,8 @@ struct CBPinEntryViewDefaults {
 
     // Default font for entry fields
     static let entryFont: UIFont = UIFont.systemFont(ofSize: 16)
+
+    static let isSecure: Bool = false
+
+    static let secureCharacter: String = "●"
 }

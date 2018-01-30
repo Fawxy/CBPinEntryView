@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/cocoapods/l/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
 [![Platform](https://img.shields.io/cocoapods/p/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
 
-CBPinEntryView is a view written in Swift to allow easy and slick entry of pins or codes. It allows backspacing, dismissal of keyboard and continuation, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard.
+CBPinEntryView is a view written in Swift to allow easy and slick entry of pins or codes. It allows backspacing, dismissal of keyboard and continuation, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard. Now with secure entry option!
 
 <img src='http://i.imgur.com/dAdUVkp.gif' alt='Showing easy entry and deletion' width='350'>
 
@@ -22,7 +22,7 @@ pod "CBPinEntryView"
 ```
 Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. Create an outlet in your file and customise either with the IBInspectable properties or in your code.
 
-Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
+Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`. Secure entry with customisable secure character (change from ● to ✱ or any other character).
 
 There is now also an error mode which can be toggled with `entryView.toggleError()`. It is automatically removed if the user taps on the field or starts typing again.
 

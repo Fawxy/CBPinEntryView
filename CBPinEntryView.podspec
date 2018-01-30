@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CBPinEntryView'
-  s.version          = '1.5.0'
+  s.version          = '1.5.1'
   s.summary          = 'A view for entering arbitrary length numerical pins or codes written in Swift 4.0.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-This view allows a user to enter a pin or code (for security/mobile verification etc) of any length. It allows deletion, continuation and allows you to get the entire entered code as a single String or Int without having to join Strings from multiple text fields. It's fast, looks nice (I think) and is customisable! Requires iOS 9+.
+This view allows a user to enter a pin or code (for security/mobile verification etc) of any length. It allows deletion, continuation, secure entry, and allows you to get the entire entered code as a single String or Int without having to join Strings from multiple text fields. It's fast, looks nice (I think) and is customisable! Requires iOS 9+.
                        DESC
 
   s.homepage         = 'https://github.com/Fawxy/CBPinEntryView'

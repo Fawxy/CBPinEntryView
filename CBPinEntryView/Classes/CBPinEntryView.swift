@@ -74,6 +74,10 @@ public protocol CBPinEntryViewDelegate: class {
         }
     }
 
+    @IBInspectable open var isSecure: Bool = CBPinEntryViewDefaults.isSecure
+
+    @IBInspectable open var secureCharacter: String = CBPinEntryViewDefaults.secureCharacter
+
     private var stackView: UIStackView?
     private var textField: UITextField!
 
@@ -264,7 +268,11 @@ extension CBPinEntryView: UITextFieldDelegate {
                 if button.tag == newLength {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
                     UIView.setAnimationsEnabled(false)
-                    button.setTitle(string, for: .normal)
+                    if !isSecure {
+                        button.setTitle(string, for: .normal)
+                    } else {
+                        button.setTitle(secureCharacter, for: .normal)
+                    }
                     UIView.setAnimationsEnabled(true)
                 } else if button.tag == newLength + 1 {
                     button.layer.borderColor = entryBorderColour.cgColor
