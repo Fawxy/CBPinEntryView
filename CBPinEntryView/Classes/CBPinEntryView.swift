@@ -117,8 +117,14 @@ public protocol CBPinEntryViewDelegate: class {
         stackView!.axis = .horizontal
         stackView!.distribution = .fillEqually
         stackView!.spacing = 10
-
+        stackView!.translatesAutoresizingMaskIntoConstraints = false
+        
         self.addSubview(stackView!)
+        
+        stackView!.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        stackView!.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
+        stackView!.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        stackView!.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
     }
 
     private func setupTextField() {
