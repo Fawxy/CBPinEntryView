@@ -13,7 +13,7 @@ struct CBPinEntryViewDefaults {
     // Default number of fields
     static let length: Int = 4
     
-    //Default spacing between fileds
+    // Default spacing between fileds
     static let spacing: CGFloat = 10
 
     // Default backgorund colour of pin entry field
