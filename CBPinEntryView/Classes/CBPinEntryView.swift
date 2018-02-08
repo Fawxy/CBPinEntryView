@@ -16,7 +16,7 @@ public protocol CBPinEntryViewDelegate: class {
 
     @IBInspectable open var length: Int = CBPinEntryViewDefaults.length
     
-    @IBInspectable open var spacing: Int = CBPinEntryViewDefaults.spacing
+    @IBInspectable open var spacing: CGFloat = CBPinEntryViewDefaults.spacing
 
     @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius {
         didSet {
