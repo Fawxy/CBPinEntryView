@@ -15,6 +15,8 @@ public protocol CBPinEntryViewDelegate: class {
 @IBDesignable open class CBPinEntryView: UIView {
 
     @IBInspectable open var length: Int = CBPinEntryViewDefaults.length
+    
+    @IBInspectable open var spacing: CGFloat = CBPinEntryViewDefaults.spacing
 
     @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius {
         didSet {
@@ -122,7 +124,7 @@ public protocol CBPinEntryViewDelegate: class {
         stackView!.alignment = .fill
         stackView!.axis = .horizontal
         stackView!.distribution = .fillEqually
-        stackView!.spacing = 10
+        stackView!.spacing = spacing
         stackView!.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(stackView!)
