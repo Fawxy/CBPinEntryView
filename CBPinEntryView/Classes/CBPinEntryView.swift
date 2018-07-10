@@ -234,12 +234,23 @@ public protocol CBPinEntryViewDelegate: class {
     
     @discardableResult open override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
-        
-        entryButtons.forEach {
-            $0.layer.borderColor = entryDefaultBorderColour.cgColor
-        }
-        
+        clearError()
         return textField.resignFirstResponder()
+    }
+
+    open func clearError() {
+        errorMode = false
+        entryButtons.forEach {
+            $0.layer.borderColor = entryBorderColour.cgColor
+        }
+    }
+
+    open func clear() {
+        clearError()
+        textField.text = ""
+        entryButtons.forEach {
+            $0.setTitle("", for: .normal)
+        }
     }
 }
 
@@ -250,10 +261,7 @@ extension CBPinEntryView: UITextFieldDelegate {
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        errorMode = false
-        for button in entryButtons {
-            button.layer.borderColor = entryBorderColour.cgColor
-        }
+        clearError()
 
         let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
 
