@@ -10,6 +10,7 @@ import UIKit
 import CBPinEntryView
 
 class ViewController: UIViewController {
+    var isUnderlined = false
 
     @IBOutlet var pinEntryView: CBPinEntryView! {
         didSet {
@@ -17,6 +18,12 @@ class ViewController: UIViewController {
         }
     }
     @IBOutlet var stringOutputLabel: UILabel!
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Underline" {
+            (segue.destination as! ViewController).isUnderlined = true
+        }
+    }
 
     @IBAction func pressedButton(_ sender: UIButton) {
         stringOutputLabel.text = pinEntryView.getPinAsString()
