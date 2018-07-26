@@ -85,7 +85,7 @@ public protocol CBPinEntryViewDelegate: class {
     private var stackView: UIStackView?
     private var textField: UITextField!
 
-    fileprivate var errorMode: Bool = false
+    open var errorMode: Bool = false
 
     fileprivate var entryButtons: [UIButton] = [UIButton]()
 
@@ -195,19 +195,31 @@ public protocol CBPinEntryViewDelegate: class {
         textField.becomeFirstResponder()
     }
 
-    open func toggleError() {
-        if !errorMode {
+    open func setError(isError: Bool) {
+        if isError {
+            errorMode = true
             for button in entryButtons {
                 button.layer.borderColor = entryErrorBorderColour.cgColor
                 button.layer.borderWidth = entryBorderWidth
             }
         } else {
+            errorMode = false
             for button in entryButtons {
                 button.layer.borderColor = entryBorderColour.cgColor
             }
         }
+    }
 
-        errorMode = !errorMode
+    open func clearEntry() {
+        setError(isError: false)
+        textField.text = ""
+        for button in entryButtons {
+            button.setTitle("", for: .normal)
+        }
+
+        if let firstButton = entryButtons.first {
+            didPressCodeButton(firstButton)
+        }
     }
 
     open func getPinAsInt() -> Int? {
@@ -235,9 +247,7 @@ public protocol CBPinEntryViewDelegate: class {
     @discardableResult open override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
         
-        entryButtons.forEach {
-            $0.layer.borderColor = entryDefaultBorderColour.cgColor
-        }
+        setError(isError: false)
         
         return textField.resignFirstResponder()
     }

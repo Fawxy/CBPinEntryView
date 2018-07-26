@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -66,21 +66,39 @@
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e7G-Qq-ufL">
-                                <rect key="frame" x="141" y="252.5" width="38" height="30"/>
-                                <state key="normal" title="Press"/>
+                                <rect key="frame" x="136" y="252.5" width="49" height="30"/>
+                                <state key="normal" title="Submit"/>
                                 <connections>
-                                    <action selector="pressedButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ohr-U9-pHP"/>
+                                    <action selector="pressedGetCode:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="uAS-Zl-ovd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qcc-XO-4s7">
+                                <rect key="frame" x="118" y="302.5" width="84" height="30"/>
+                                <state key="normal" title="Toggle error"/>
+                                <connections>
+                                    <action selector="toggleError:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="CMR-iR-lYp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gkp-B4-Rf5">
+                                <rect key="frame" x="142" y="352.5" width="36" height="30"/>
+                                <state key="normal" title="Clear"/>
+                                <connections>
+                                    <action selector="pressedClear:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="s4X-QJ-IXz"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.94509803920000002" green="0.96078431369999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="qcc-XO-4s7" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="Cj4-HF-I59"/>
                             <constraint firstItem="l00-Oi-KOV" firstAttribute="top" secondItem="8mn-8t-3Ic" secondAttribute="bottom" constant="30" id="Fto-dd-m9g"/>
+                            <constraint firstItem="Gkp-B4-Rf5" firstAttribute="top" secondItem="qcc-XO-4s7" secondAttribute="bottom" constant="20" id="Tct-Nx-GvP"/>
                             <constraint firstItem="8mn-8t-3Ic" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" multiplier="0.5" id="e15-Jp-UgT"/>
                             <constraint firstItem="l00-Oi-KOV" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="g8I-HD-8da"/>
                             <constraint firstItem="e7G-Qq-ufL" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="hkh-Ok-IeY"/>
                             <constraint firstItem="8mn-8t-3Ic" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="kSo-Zi-uTG"/>
+                            <constraint firstItem="Gkp-B4-Rf5" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="pKl-BL-O1c"/>
                             <constraint firstItem="e7G-Qq-ufL" firstAttribute="top" secondItem="l00-Oi-KOV" secondAttribute="bottom" constant="40" id="rQd-Pj-ZOf"/>
+                            <constraint firstItem="qcc-XO-4s7" firstAttribute="top" secondItem="e7G-Qq-ufL" secondAttribute="bottom" constant="20" id="tyB-mB-qJl"/>
                         </constraints>
                     </view>
                     <connections>
