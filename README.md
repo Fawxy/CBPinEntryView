@@ -55,10 +55,6 @@ Customise keyboard type! The keyboard types are an enum with int raw values. Opt
 9: twitter // A type optimized for twitter text entry (easy access to @ #)
 ```
 
-## Author
-
-Chris Byatt, byatt.chris@gmail.com
-
 ## License
 
 CBPinEntryView is available under the MIT license. See the LICENSE file for more info.
