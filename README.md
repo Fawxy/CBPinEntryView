@@ -8,19 +8,19 @@ CBPinEntryView is a view written in Swift to allow easy and slick entry of pins 
 
 Enter pins easily!
 
-<img src='https://i.imgur.com/b0lQS42.gif' alt='Easy pin entry' width='350'>
+<img src='http://i.imgur.com/75oYhG5.gif' alt='Easy pin entry' width='350'>
 
 Communicate user error
 
-<img src='https://i.imgur.com/qN3lCOW.gif' alt='Toggling error mode' width='350'>
+<img src='http://i.imgur.com/UU5Xm7X.gif' alt='Toggling error mode' width='350'>
 
 Clear the text field to retry
 
-<img src='https://i.imgur.com/SI7Bszr.gif' alt='Clear entry' width='350'>
+<img src='http://i.imgur.com/ABZH0Ea.gif' alt='Clear entry' width='350'>
 
 Secure entry mode
 
-<img src='https://i.imgur.com/Xj9KEw8.gif' alt='Secure entry mode' width='350'>
+<img src='http://i.imgur.com/zAhXL7O.gif' alt='Secure entry mode' width='350'>
 
 ## Example
 
