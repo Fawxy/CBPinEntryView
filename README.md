@@ -4,9 +4,23 @@
 [![License](https://img.shields.io/cocoapods/l/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
 [![Platform](https://img.shields.io/cocoapods/p/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
 
-CBPinEntryView is a view written in Swift to allow easy and slick entry of pins or codes. It allows backspacing, dismissal of keyboard and continuation, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard. Now with secure entry option!
+CBPinEntryView is a view written in Swift to allow easy and slick entry of pins or codes. It allows backspacing, dismissal of keyboard and continuing where you left off, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard.
 
-<img src='http://i.imgur.com/dAdUVkp.gif' alt='Showing easy entry and deletion' width='350'>
+Enter pins easily!
+
+<img src='https://i.imgur.com/b0lQS42.gif' alt='Easy pin entry' width='350'>
+
+Communicate user error
+
+<img src='https://i.imgur.com/qN3lCOW.gif' alt='Toggling error mode' width='350'>
+
+Clear the text field to retry
+
+<img src='https://i.imgur.com/SI7Bszr.gif' alt='Clear entry' width='350'>
+
+Secure entry mode
+
+<img src='https://i.imgur.com/Xj9KEw8.gif' alt='Secure entry mode' width='350'>
 
 ## Example
 
