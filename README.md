@@ -38,7 +38,7 @@ Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. C
 
 Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`. Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
 
-There is now also an error mode which can be toggled with `entryView.toggleError()`. It is automatically removed if the user taps on the field or starts typing again.
+There is an error mode which can be enabled with `pinEntryView.setError(isError: true)` and disabled with `pinEntryView.setError(isError: false)`. Whether error mode is enabled can be checked with `pinEntryView.errorMode`. Calling `pinEntryView.resignFirstResponder()` will hide the keyboard and disable the error mode.
 
 Customise keyboard type! The keyboard types are an enum with int raw values. Options are as follows:
 
