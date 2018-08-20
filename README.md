@@ -6,21 +6,13 @@
 
 CBPinEntryView is a view written in Swift to allow easy and slick entry of pins or codes. It allows backspacing, dismissal of keyboard and continuing where you left off, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard.
 
-Enter pins easily!
+## Preview
 
-<img src='http://i.imgur.com/75oYhG5.gif' alt='Easy pin entry' width='350'>
 
-Communicate user error
 
-<img src='http://i.imgur.com/UU5Xm7X.gif' alt='Toggling error mode' width='350'>
-
-Clear the text field to retry
-
-<img src='http://i.imgur.com/ABZH0Ea.gif' alt='Clear entry' width='350'>
-
-Secure entry mode
-
-<img src='http://i.imgur.com/zAhXL7O.gif' alt='Secure entry mode' width='350'>
+| Enter pins easily! | Communicate user error | Clear the text field to retry | Secure entry mode |
+|:------------------:|:----------------------:|:-----------------------------:|:-----------------:|
+| ![](http://i.imgur.com/75oYhG5.gif) | ![](http://i.imgur.com/UU5Xm7X.gif) | ![](http://i.imgur.com/ABZH0Ea.gif) | ![](http://i.imgur.com/zAhXL7O.gif) |
 
 ## Example
 
