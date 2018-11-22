@@ -38,7 +38,7 @@
                                     <userDefinedRuntimeAttribute type="color" keyPath="entryDefaultBorderColour">
                                         <color key="value" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isSecure" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isSecure" value="NO"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="keyboardType">
                                         <integer key="value" value="0"/>
                                     </userDefinedRuntimeAttribute>

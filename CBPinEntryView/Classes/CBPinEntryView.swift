@@ -100,6 +100,20 @@ public protocol CBPinEntryViewDelegate: class {
         }
     }
 
+    open var textFieldCapitalization: UITextAutocapitalizationType? {
+        didSet {
+            if let capitalization = textFieldCapitalization {
+                textField.autocapitalizationType = capitalization
+            }
+        }
+    }
+
+    public enum AllowedEntryTypes: String {
+        case any, numerical, alphanumeric, letters
+    }
+
+    open var allowedEntryTypes: AllowedEntryTypes = .numerical
+
 
     private var stackView: UIStackView?
     private var textField: UITextField!
@@ -290,8 +304,18 @@ extension CBPinEntryView: UITextFieldDelegate {
 
         let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
 
-        if string.count > 0 && !Scanner(string: string).scanInt(nil) {
-            return false
+        if string.count > 0 {
+            var allowed = true
+            switch allowedEntryTypes {
+            case .numerical: allowed = Scanner(string: string).scanInt(nil)
+            case .letters: allowed = Scanner(string: string).scanCharacters(from: CharacterSet.letters, into: nil)
+            case .alphanumeric: allowed = Scanner(string: string).scanCharacters(from: CharacterSet.alphanumerics, into: nil)
+            case .any: break
+            }
+
+            if !allowed {
+                return false
+            }
         }
 
         let oldLength = textField.text!.count

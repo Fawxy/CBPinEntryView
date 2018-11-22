@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     
     @IBAction func pressedGetCode(_ sender: UIButton) {
         stringOutputLabel.text = pinEntryView.getPinAsString()
-        print(pinEntryView.getPinAsInt() ?? "Nothing entered")
+        print(pinEntryView.getPinAsInt() ?? "Not an int")
         pinEntryView.resignFirstResponder()
     }
 
