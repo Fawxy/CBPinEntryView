@@ -81,6 +81,17 @@ public protocol CBPinEntryViewDelegate: class {
     @IBInspectable open var secureCharacter: String = CBPinEntryViewDefaults.secureCharacter
 
     @IBInspectable open var keyboardType: Int = CBPinEntryViewDefaults.keyboardType
+    
+    open var textContentType: UITextContentType? {
+        didSet {
+            if #available(iOS 10, *) {
+                if let contentType = textContentType {
+                    textField.textContentType = contentType
+                }
+            }
+        }
+    }
+
 
     private var stackView: UIStackView?
     private var textField: UITextField!

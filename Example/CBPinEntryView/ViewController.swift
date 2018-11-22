@@ -18,6 +18,13 @@ class ViewController: UIViewController {
     }
     @IBOutlet var stringOutputLabel: UILabel!
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if #available(iOS 12, *) {
+            pinEntryView.textContentType = .oneTimeCode
+        }
+    }
+    
     @IBAction func pressedGetCode(_ sender: UIButton) {
         stringOutputLabel.text = pinEntryView.getPinAsString()
         print(pinEntryView.getPinAsInt() ?? "Nothing entered")
