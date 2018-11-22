@@ -32,7 +32,7 @@ Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. C
 
 Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
 
-### Secury entry
+### Secure entry
 
 Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
 Change the secure entry character by setting the `secureCharacter` property.
