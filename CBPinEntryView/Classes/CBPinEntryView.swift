@@ -50,6 +50,14 @@ public protocol CBPinEntryViewDelegate: class {
         }
     }
 
+    @IBInspectable open var entryEditingBackgroundColour: UIColor = CBPinEntryViewDefaults.entryEditingBackgroundColour {
+        didSet {
+            if oldValue != entryEditingBackgroundColour {
+                updateButtonStyles()
+            }
+        }
+    }
+
     @IBInspectable open var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
 
     @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour {
@@ -198,8 +206,10 @@ public protocol CBPinEntryViewDelegate: class {
 
             if button.tag == entryIndex {
                 button.layer.borderColor = entryBorderColour.cgColor
+                button.backgroundColor = entryEditingBackgroundColour
             } else {
                 button.layer.borderColor = entryDefaultBorderColour.cgColor
+                button.backgroundColor = entryBackgroundColour
             }
         }
         
@@ -216,7 +226,8 @@ public protocol CBPinEntryViewDelegate: class {
         } else {
             errorMode = false
             for button in entryButtons {
-                button.layer.borderColor = entryBorderColour.cgColor
+                button.layer.borderColor = entryDefaultBorderColour.cgColor
+                button.backgroundColor = entryBackgroundColour
             }
         }
     }
@@ -274,6 +285,7 @@ extension CBPinEntryView: UITextFieldDelegate {
         errorMode = false
         for button in entryButtons {
             button.layer.borderColor = entryBorderColour.cgColor
+            button.backgroundColor = entryBackgroundColour
         }
 
         let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
@@ -301,19 +313,23 @@ extension CBPinEntryView: UITextFieldDelegate {
                     UIView.setAnimationsEnabled(true)
                 } else if button.tag == newLength + 1 {
                     button.layer.borderColor = entryBorderColour.cgColor
+                    button.backgroundColor = entryEditingBackgroundColour
                 } else {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.backgroundColor = entryBackgroundColour
                 }
             }
         } else {
             for button in entryButtons {
                 if button.tag == oldLength {
                     button.layer.borderColor = entryBorderColour.cgColor
+                    button.backgroundColor = entryEditingBackgroundColour
                     UIView.setAnimationsEnabled(false)
                     button.setTitle("", for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.backgroundColor = entryBackgroundColour
                 }
             }
         }
