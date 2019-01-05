@@ -25,9 +25,29 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBAction func pressedButton(_ sender: UIButton) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if #available(iOS 12, *) {
+            pinEntryView.textContentType = .oneTimeCode
+        }
+    }
+    
+    @IBAction func pressedGetCode(_ sender: UIButton) {
         stringOutputLabel.text = pinEntryView.getPinAsString()
-        print(pinEntryView.getPinAsInt() ?? "Nothing entered")
+        print(pinEntryView.getPinAsInt() ?? "Not an int")
+        pinEntryView.resignFirstResponder()
+    }
+
+    @IBAction func toggleError(_ sender: UIButton) {
+        if !pinEntryView.errorMode {
+            pinEntryView.setError(isError: true)
+        } else {
+            pinEntryView.setError(isError: false)
+        }
+    }
+
+    @IBAction func pressedClear(_ sender: UIButton) {
+        pinEntryView.clearEntry()
     }
 }
 

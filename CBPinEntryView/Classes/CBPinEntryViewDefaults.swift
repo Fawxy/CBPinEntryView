@@ -28,6 +28,9 @@ struct CBPinEntryViewDefaults {
     // Default border colour of currently editing field
     static let entryBorderColour: UIColor = UIColor(red: 69/255, green: 78/255, blue: 86/255, alpha: 1.0)
 
+    // Default background colour of currently editing field
+    static let entryEditingBackgroundColour: UIColor = UIColor(red: 135/255, green: 154/255, blue: 168/255, alpha: 1.0)
+
     // Default border colour for error state
     static let entryErrorColour: UIColor = UIColor.red
 

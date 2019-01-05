@@ -50,6 +50,14 @@ public protocol CBPinEntryViewDelegate: class {
         }
     }
 
+    @IBInspectable open var entryEditingBackgroundColour: UIColor = CBPinEntryViewDefaults.entryEditingBackgroundColour {
+        didSet {
+            if oldValue != entryEditingBackgroundColour {
+                updateButtonStyles()
+            }
+        }
+    }
+
     @IBInspectable open var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
 
     @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour {
@@ -81,6 +89,31 @@ public protocol CBPinEntryViewDelegate: class {
     @IBInspectable open var secureCharacter: String = CBPinEntryViewDefaults.secureCharacter
 
     @IBInspectable open var keyboardType: Int = CBPinEntryViewDefaults.keyboardType
+    
+    open var textContentType: UITextContentType? {
+        didSet {
+            if #available(iOS 10, *) {
+                if let contentType = textContentType {
+                    textField.textContentType = contentType
+                }
+            }
+        }
+    }
+
+    open var textFieldCapitalization: UITextAutocapitalizationType? {
+        didSet {
+            if let capitalization = textFieldCapitalization {
+                textField.autocapitalizationType = capitalization
+            }
+        }
+    }
+
+    public enum AllowedEntryTypes: String {
+        case any, numerical, alphanumeric, letters
+    }
+
+    open var allowedEntryTypes: AllowedEntryTypes = .numerical
+
 
     @IBInspectable open var isUnderlined: Bool = false
     @IBInspectable open var underLineThickness: CGFloat = CBPinEntryViewDefaults.entryUnderlineThickness
@@ -89,7 +122,7 @@ public protocol CBPinEntryViewDelegate: class {
     private var stackView: UIStackView?
     private var textField: UITextField!
 
-    fileprivate var errorMode: Bool = false
+    open var errorMode: Bool = false
 
     fileprivate var entryButtons: [UIButton] = [UIButton]()
 
@@ -196,27 +229,42 @@ public protocol CBPinEntryViewDelegate: class {
 
             if button.tag == entryIndex {
                 button.layer.borderColor = entryBorderColour.cgColor
+                button.backgroundColor = entryEditingBackgroundColour
             } else {
                 button.layer.borderColor = entryDefaultBorderColour.cgColor
+                button.backgroundColor = entryBackgroundColour
             }
         }
         
         textField.becomeFirstResponder()
     }
 
-    open func toggleError() {
-        if !errorMode {
+    open func setError(isError: Bool) {
+        if isError {
+            errorMode = true
             for button in entryButtons {
                 button.layer.borderColor = entryErrorBorderColour.cgColor
                 button.layer.borderWidth = entryBorderWidth
             }
         } else {
+            errorMode = false
             for button in entryButtons {
-                button.layer.borderColor = entryBorderColour.cgColor
+                button.layer.borderColor = entryDefaultBorderColour.cgColor
+                button.backgroundColor = entryBackgroundColour
             }
         }
+    }
 
-        errorMode = !errorMode
+    open func clearEntry() {
+        setError(isError: false)
+        textField.text = ""
+        for button in entryButtons {
+            button.setTitle("", for: .normal)
+        }
+
+        if let firstButton = entryButtons.first {
+            didPressCodeButton(firstButton)
+        }
     }
 
     open func getPinAsInt() -> Int? {
@@ -244,9 +292,7 @@ public protocol CBPinEntryViewDelegate: class {
     @discardableResult open override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
         
-        entryButtons.forEach {
-            $0.layer.borderColor = entryDefaultBorderColour.cgColor
-        }
+        setError(isError: false)
         
         return textField.resignFirstResponder()
     }
@@ -262,12 +308,23 @@ extension CBPinEntryView: UITextFieldDelegate {
         errorMode = false
         for button in entryButtons {
             button.layer.borderColor = entryBorderColour.cgColor
+            button.backgroundColor = entryBackgroundColour
         }
 
         let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
 
-        if string.count > 0 && !Scanner(string: string).scanInt(nil) {
-            return false
+        if string.count > 0 {
+            var allowed = true
+            switch allowedEntryTypes {
+            case .numerical: allowed = Scanner(string: string).scanInt(nil)
+            case .letters: allowed = Scanner(string: string).scanCharacters(from: CharacterSet.letters, into: nil)
+            case .alphanumeric: allowed = Scanner(string: string).scanCharacters(from: CharacterSet.alphanumerics, into: nil)
+            case .any: break
+            }
+
+            if !allowed {
+                return false
+            }
         }
 
         let oldLength = textField.text!.count
@@ -289,19 +346,23 @@ extension CBPinEntryView: UITextFieldDelegate {
                     UIView.setAnimationsEnabled(true)
                 } else if button.tag == newLength + 1 {
                     button.layer.borderColor = entryBorderColour.cgColor
+                    button.backgroundColor = entryEditingBackgroundColour
                 } else {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.backgroundColor = entryBackgroundColour
                 }
             }
         } else {
             for button in entryButtons {
                 if button.tag == oldLength {
                     button.layer.borderColor = entryBorderColour.cgColor
+                    button.backgroundColor = entryEditingBackgroundColour
                     UIView.setAnimationsEnabled(false)
                     button.setTitle("", for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.backgroundColor = entryBackgroundColour
                 }
             }
         }
