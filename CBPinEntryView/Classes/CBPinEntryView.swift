@@ -34,17 +34,25 @@ public protocol CBPinEntryViewDelegate: class {
         }
     }
 
-    @IBInspectable open var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour {
+    @IBInspectable open var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour {
         didSet {
-            if oldValue != entryDefaultBorderColour {
+            if oldValue != entryBorderColour {
                 updateButtonStyles()
             }
         }
     }
 
-    @IBInspectable open var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour {
+    @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour {
         didSet {
-            if oldValue != entryBorderColour {
+            if oldValue != entryBackgroundColour {
+                updateButtonStyles()
+            }
+        }
+    }
+
+    @IBInspectable open var entryEditingBorderColour: UIColor = CBPinEntryViewDefaults.entryEditingBorderColour {
+        didSet {
+            if oldValue != entryEditingBorderColour {
                 updateButtonStyles()
             }
         }
@@ -59,14 +67,6 @@ public protocol CBPinEntryViewDelegate: class {
     }
 
     @IBInspectable open var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
-
-    @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour {
-        didSet {
-            if oldValue != entryBackgroundColour {
-                updateButtonStyles()
-            }
-        }
-    }
 
     @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour {
         didSet {
@@ -184,6 +184,8 @@ public protocol CBPinEntryViewDelegate: class {
     }
 
     private func createButtons() {
+        entryButtons.removeAll()
+
         for i in 0..<length {
             let button = UIButton()
             button.backgroundColor = entryBackgroundColour
@@ -191,7 +193,7 @@ public protocol CBPinEntryViewDelegate: class {
             button.titleLabel?.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryDefaultBorderColour.cgColor
+            button.layer.borderColor = entryBorderColour.cgColor
             button.layer.borderWidth = entryBorderWidth
 
             button.tag = i + 1
@@ -210,7 +212,7 @@ public protocol CBPinEntryViewDelegate: class {
             button.titleLabel?.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryDefaultBorderColour.cgColor
+            button.layer.borderColor = entryBorderColour.cgColor
             button.layer.borderWidth = entryBorderWidth
         }
     }
@@ -220,14 +222,9 @@ public protocol CBPinEntryViewDelegate: class {
         
         let entryIndex = textField.text!.count + 1
         for button in entryButtons {
-            button.layer.borderColor = entryBorderColour.cgColor
-
             if button.tag == entryIndex {
-                button.layer.borderColor = entryBorderColour.cgColor
+                button.layer.borderColor = entryEditingBorderColour.cgColor
                 button.backgroundColor = entryEditingBackgroundColour
-            } else {
-                button.layer.borderColor = entryDefaultBorderColour.cgColor
-                button.backgroundColor = entryBackgroundColour
             }
         }
         
@@ -244,7 +241,7 @@ public protocol CBPinEntryViewDelegate: class {
         } else {
             errorMode = false
             for button in entryButtons {
-                button.layer.borderColor = entryDefaultBorderColour.cgColor
+                button.layer.borderColor = entryBorderColour.cgColor
                 button.backgroundColor = entryBackgroundColour
             }
         }
@@ -299,15 +296,20 @@ extension CBPinEntryView: UITextFieldDelegate {
         delegate?.entryChanged(complete)
     }
 
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        errorMode = false
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         for button in entryButtons {
             button.layer.borderColor = entryBorderColour.cgColor
             button.backgroundColor = entryBackgroundColour
         }
 
-        let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
+        textField.resignFirstResponder()
+        return true
+    }
 
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        errorMode = false
+
+        let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
         if string.count > 0 {
             var allowed = true
             switch allowedEntryTypes {
@@ -331,7 +333,8 @@ extension CBPinEntryView: UITextFieldDelegate {
         if !deleting {
             for button in entryButtons {
                 if button.tag == newLength {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.layer.borderColor = entryBorderColour.cgColor
+                    button.backgroundColor = entryBackgroundColour
                     UIView.setAnimationsEnabled(false)
                     if !isSecure {
                         button.setTitle(string, for: .normal)
@@ -340,23 +343,20 @@ extension CBPinEntryView: UITextFieldDelegate {
                     }
                     UIView.setAnimationsEnabled(true)
                 } else if button.tag == newLength + 1 {
-                    button.layer.borderColor = entryBorderColour.cgColor
+                    button.layer.borderColor = entryEditingBorderColour.cgColor
                     button.backgroundColor = entryEditingBackgroundColour
-                } else {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    button.backgroundColor = entryBackgroundColour
                 }
             }
         } else {
             for button in entryButtons {
                 if button.tag == oldLength {
-                    button.layer.borderColor = entryBorderColour.cgColor
+                    button.layer.borderColor = entryEditingBorderColour.cgColor
                     button.backgroundColor = entryEditingBackgroundColour
                     UIView.setAnimationsEnabled(false)
                     button.setTitle("", for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.layer.borderColor = entryBorderColour.cgColor
                     button.backgroundColor = entryBackgroundColour
                 }
             }
