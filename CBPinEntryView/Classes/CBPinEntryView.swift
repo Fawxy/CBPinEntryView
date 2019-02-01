@@ -141,6 +141,8 @@ public protocol CBPinEntryViewDelegate: class {
     }
 
     override open func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+
         commonInit()
     }
 
@@ -153,6 +155,8 @@ public protocol CBPinEntryViewDelegate: class {
     }
 
     private func setupStackView() {
+        stackView?.removeFromSuperview()
+        
         stackView = UIStackView(frame: bounds)
         stackView!.alignment = .fill
         stackView!.axis = .horizontal
