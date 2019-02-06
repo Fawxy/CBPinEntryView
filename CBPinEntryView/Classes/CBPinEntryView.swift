@@ -372,7 +372,7 @@ extension CBPinEntryView: UITextFieldDelegate {
 }
 
 extension CBPinEntryView {
-    func configurePaste() {
+    private func configurePaste() {
         isUserInteractionEnabled = true
         addGestureRecognizer(UILongPressGestureRecognizer(
             target: self,
@@ -380,7 +380,7 @@ extension CBPinEntryView {
         ))
     }
 
-    @objc func showPasteMenu(sender: Any?) {
+    @objc private func showPasteMenu(sender: Any?) {
         let menu = UIMenuController.shared
         textField.becomeFirstResponder()
         if !menu.isMenuVisible {
