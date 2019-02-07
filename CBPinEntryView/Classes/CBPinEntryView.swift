@@ -295,6 +295,10 @@ extension CBPinEntryView: UITextFieldDelegate {
         delegate?.entryChanged(complete)
     }
 
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        setError(isError: false)
+    }
+
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         for button in entryButtons {
             button.layer.borderColor = entryBorderColour.cgColor
@@ -390,8 +394,8 @@ extension CBPinEntryView {
     }
 }
 
-private class PinEntryTextField: UITextField {
-    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+class PinEntryTextField: UITextField {
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return (action == #selector(paste(_:)))
     }
 }
