@@ -388,8 +388,12 @@ extension CBPinEntryView {
         let menu = UIMenuController.shared
         textField.becomeFirstResponder()
         if !menu.isMenuVisible {
-            menu.setTargetRect(bounds, in: self)
-            menu.setMenuVisible(true, animated: true)
+            let buttonIndex = self.textField.text!.count
+            if buttonIndex < length {
+                let button = entryButtons[buttonIndex]
+                menu.setTargetRect(button.frame, in: self)
+                menu.setMenuVisible(true, animated: true)
+            }
         }
     }
 }
