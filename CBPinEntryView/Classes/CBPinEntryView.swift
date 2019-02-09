@@ -116,7 +116,7 @@ public protocol CBPinEntryViewDelegate: class {
 
 
     private var stackView: UIStackView?
-    private var textField: PinEntryTextField!
+    public private(set) var textField: PinEntryTextField!
 
     open var errorMode: Bool = false
 
@@ -398,8 +398,8 @@ extension CBPinEntryView {
     }
 }
 
-class PinEntryTextField: UITextField {
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+public class PinEntryTextField: UITextField {
+    override public func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         return (action == #selector(paste(_:)))
     }
 }
