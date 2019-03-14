@@ -8,122 +8,41 @@
 
 import UIKit
 
-public protocol CBPinEntryViewDelegate: class {
-    func entryChanged(_ completed: Bool)
-}
+open class CBPinEntryView: UIView {
 
-@IBDesignable open class CBPinEntryView: UIView {
+    @IBInspectable var length: Int = CBPinEntryViewDefaults.length
 
-    @IBInspectable open var length: Int = CBPinEntryViewDefaults.length
+    @IBInspectable var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius
+    @IBInspectable var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour
+
+    @IBInspectable var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour
+    @IBInspectable var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour
     
-    @IBInspectable open var spacing: CGFloat = CBPinEntryViewDefaults.spacing
+    private var keyboardType: UIKeyboardType = .numberPad
+    public var allowsSpaces = false
 
-    @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius {
+    @IBInspectable var entryFont: UIFont = CBPinEntryViewDefaults.entryFont {
         didSet {
-            if oldValue != entryCornerRadius {
-                updateButtonStyles()
+            entryButtons.forEach {
+                $0.titleLabel?.font = entryFont
             }
         }
     }
-
-    @IBInspectable open var entryBorderWidth: CGFloat = CBPinEntryViewDefaults.entryBorderWidth {
-        didSet {
-            if oldValue != entryBorderWidth {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var entryDefaultBorderColour: UIColor = CBPinEntryViewDefaults.entryDefaultBorderColour {
-        didSet {
-            if oldValue != entryDefaultBorderColour {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var entryBorderColour: UIColor = CBPinEntryViewDefaults.entryBorderColour {
-        didSet {
-            if oldValue != entryBorderColour {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var entryEditingBackgroundColour: UIColor = CBPinEntryViewDefaults.entryEditingBackgroundColour {
-        didSet {
-            if oldValue != entryEditingBackgroundColour {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var entryErrorBorderColour: UIColor = CBPinEntryViewDefaults.entryErrorColour
-
-    @IBInspectable open var entryBackgroundColour: UIColor = CBPinEntryViewDefaults.entryBackgroundColour {
-        didSet {
-            if oldValue != entryBackgroundColour {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var entryTextColour: UIColor = CBPinEntryViewDefaults.entryTextColour {
-        didSet {
-            if oldValue != entryTextColour {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var entryFont: UIFont = CBPinEntryViewDefaults.entryFont {
-        didSet {
-            if oldValue != entryFont {
-                updateButtonStyles()
-            }
-        }
-    }
-
-    @IBInspectable open var isSecure: Bool = CBPinEntryViewDefaults.isSecure
-
-    @IBInspectable open var secureCharacter: String = CBPinEntryViewDefaults.secureCharacter
-
-    @IBInspectable open var keyboardType: Int = CBPinEntryViewDefaults.keyboardType
     
-    open var textContentType: UITextContentType? {
-        didSet {
-            if #available(iOS 10, *) {
-                if let contentType = textContentType {
-                    textField.textContentType = contentType
-                }
-            }
-        }
-    }
-
-    open var textFieldCapitalization: UITextAutocapitalizationType? {
-        didSet {
-            if let capitalization = textFieldCapitalization {
-                textField.autocapitalizationType = capitalization
-            }
-        }
-    }
-
-    public enum AllowedEntryTypes: String {
-        case any, numerical, alphanumeric, letters
-    }
-
-    open var allowedEntryTypes: AllowedEntryTypes = .numerical
-
-
+    var returnButtonAction: (()->Void)?
+    
     private var stackView: UIStackView?
-    private var textField: UITextField!
-
-    open var errorMode: Bool = false
+    var textField: UITextField!
 
     fileprivate var entryButtons: [UIButton] = [UIButton]()
 
-    public weak var delegate: CBPinEntryViewDelegate?
-
+    init(length: Int, keyboardType: UIKeyboardType) {
+        self.length = length
+        self.keyboardType = keyboardType
+        super.init(frame: CGRect.zero)
+        commonInit()
+    }
+    
     override public init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -157,23 +76,22 @@ public protocol CBPinEntryViewDelegate: class {
         stackView!.alignment = .fill
         stackView!.axis = .horizontal
         stackView!.distribution = .fillEqually
-        stackView!.spacing = spacing
-        stackView!.translatesAutoresizingMaskIntoConstraints = false
-        
+        stackView!.spacing = 9
+
         self.addSubview(stackView!)
-        
-        stackView!.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
-        stackView!.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
-        stackView!.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
-        stackView!.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+        stackView!.translatesAutoresizingMaskIntoConstraints = false
+        stackView?.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        stackView?.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        stackView?.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        stackView?.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
     }
 
     private func setupTextField() {
         textField = UITextField(frame: bounds)
         textField.delegate = self
-        textField.keyboardType = UIKeyboardType(rawValue: keyboardType) ?? .numberPad
-        textField.addTarget(self, action: #selector(textfieldChanged(_:)), for: .editingChanged)
-
+        textField.keyboardType = keyboardType
+        textField.autocapitalizationType = .none
+        
         self.addSubview(textField)
 
         textField.isHidden = true
@@ -184,78 +102,35 @@ public protocol CBPinEntryViewDelegate: class {
             let button = UIButton()
             button.backgroundColor = entryBackgroundColour
             button.setTitleColor(entryTextColour, for: .normal)
-            button.titleLabel?.font = entryFont
+            button.titleLabel!.font = entryFont
 
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryDefaultBorderColour.cgColor
-            button.layer.borderWidth = entryBorderWidth
+            button.layer.borderColor = entryBorderColour.cgColor
+            button.layer.borderWidth = 0.0
 
             button.tag = i + 1
 
             button.addTarget(self, action: #selector(didPressCodeButton(_:)), for: .touchUpInside)
 
+            button.addBorder(side: .bottom, width: 1, color: UIColor.spGray)
+            
             entryButtons.append(button)
             stackView?.addArrangedSubview(button)
         }
     }
 
-    private func updateButtonStyles() {
-        for button in entryButtons {
-            button.backgroundColor = entryBackgroundColour
-            button.setTitleColor(entryTextColour, for: .normal)
-            button.titleLabel?.font = entryFont
-
-            button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryDefaultBorderColour.cgColor
-            button.layer.borderWidth = entryBorderWidth
-        }
-    }
-
-    @objc private func didPressCodeButton(_ sender: UIButton) {
-        errorMode = false
-        
+    @objc func didPressCodeButton(_ sender: UIButton) {
         let entryIndex = textField.text!.count + 1
-        for button in entryButtons {
-            button.layer.borderColor = entryBorderColour.cgColor
 
+        for button in entryButtons {
             if button.tag == entryIndex {
-                button.layer.borderColor = entryBorderColour.cgColor
-                button.backgroundColor = entryEditingBackgroundColour
+                button.layer.borderWidth = 1
             } else {
-                button.layer.borderColor = entryDefaultBorderColour.cgColor
-                button.backgroundColor = entryBackgroundColour
+                button.layer.borderWidth = 0
             }
         }
         
         textField.becomeFirstResponder()
-    }
-
-    open func setError(isError: Bool) {
-        if isError {
-            errorMode = true
-            for button in entryButtons {
-                button.layer.borderColor = entryErrorBorderColour.cgColor
-                button.layer.borderWidth = entryBorderWidth
-            }
-        } else {
-            errorMode = false
-            for button in entryButtons {
-                button.layer.borderColor = entryDefaultBorderColour.cgColor
-                button.backgroundColor = entryBackgroundColour
-            }
-        }
-    }
-
-    open func clearEntry() {
-        setError(isError: false)
-        textField.text = ""
-        for button in entryButtons {
-            button.setTitle("", for: .normal)
-        }
-
-        if let firstButton = entryButtons.first {
-            didPressCodeButton(firstButton)
-        }
     }
 
     open func getPinAsInt() -> Int? {
@@ -269,54 +144,11 @@ public protocol CBPinEntryViewDelegate: class {
     open func getPinAsString() -> String {
         return textField.text!
     }
-    
-    @discardableResult open override func becomeFirstResponder() -> Bool {
-        super.becomeFirstResponder()
-        
-        if let firstButton = entryButtons.first {
-            didPressCodeButton(firstButton)
-        }
-        
-        return true
-    }
-    
-    @discardableResult open override func resignFirstResponder() -> Bool {
-        super.resignFirstResponder()
-        
-        setError(isError: false)
-        
-        return textField.resignFirstResponder()
-    }
 }
 
 extension CBPinEntryView: UITextFieldDelegate {
-    @objc func textfieldChanged(_ textField: UITextField) {
-        let complete: Bool = textField.text!.count == length
-        delegate?.entryChanged(complete)
-    }
-
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        errorMode = false
-        for button in entryButtons {
-            button.layer.borderColor = entryBorderColour.cgColor
-            button.backgroundColor = entryBackgroundColour
-        }
-
         let deleting = (range.location == textField.text!.count - 1 && range.length == 1 && string == "")
-
-        if string.count > 0 {
-            var allowed = true
-            switch allowedEntryTypes {
-            case .numerical: allowed = Scanner(string: string).scanInt(nil)
-            case .letters: allowed = Scanner(string: string).scanCharacters(from: CharacterSet.letters, into: nil)
-            case .alphanumeric: allowed = Scanner(string: string).scanCharacters(from: CharacterSet.alphanumerics, into: nil)
-            case .any: break
-            }
-
-            if !allowed {
-                return false
-            }
-        }
 
         let oldLength = textField.text!.count
         let replacementLength = string.count
@@ -324,40 +156,60 @@ extension CBPinEntryView: UITextFieldDelegate {
 
         let newLength = oldLength - rangeLength + replacementLength
 
-        if !deleting {
-            for button in entryButtons {
-                if button.tag == newLength {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    UIView.setAnimationsEnabled(false)
-                    if !isSecure {
-                        button.setTitle(string, for: .normal)
-                    } else {
-                        button.setTitle(secureCharacter, for: .normal)
-                    }
-                    UIView.setAnimationsEnabled(true)
-                } else if button.tag == newLength + 1 {
-                    button.layer.borderColor = entryBorderColour.cgColor
-                    button.backgroundColor = entryEditingBackgroundColour
-                } else {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    button.backgroundColor = entryBackgroundColour
-                }
-            }
-        } else {
+        if deleting {
             for button in entryButtons {
                 if button.tag == oldLength {
-                    button.layer.borderColor = entryBorderColour.cgColor
-                    button.backgroundColor = entryEditingBackgroundColour
+                    button.layer.borderWidth = 1
                     UIView.setAnimationsEnabled(false)
                     button.setTitle("", for: .normal)
                     UIView.setAnimationsEnabled(true)
                 } else {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    button.backgroundColor = entryBackgroundColour
+                    button.layer.borderWidth = 0
+                }
+            }
+        } else {
+            guard string.count == 1 else {return false}
+            if string.contains(" ") || string.contains("\n") { return false }
+            
+            guard let firstLetter = string.first else {return false}
+            let trimmed = String(firstLetter).uppercased()
+            
+            for button in entryButtons {
+                if button.tag == newLength {
+                    button.layer.borderWidth = 0
+                    UIView.setAnimationsEnabled(false)
+                    button.setTitle(trimmed, for: .normal)
+                    UIView.setAnimationsEnabled(true)
+                } else if button.tag == newLength + 1 {
+                    button.layer.borderWidth = 1
+                } else {
+                    button.layer.borderWidth = 0
                 }
             }
         }
 
-        return newLength <= length
+        // Uppercasing new string
+        let change = newLength <= self.length
+        if change, let uiTextRange = range.toTextRange(textInput: textField) {
+            let uppercasedString = string.uppercased()
+            textField.replace(uiTextRange, withText: uppercasedString)
+        }
+        
+        return false
+    }
+    
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        returnButtonAction?()
+        return false
+    }
+}
+
+extension NSRange {
+    func toTextRange(textInput:UITextInput) -> UITextRange? {
+        if let rangeStart = textInput.position(from: textInput.beginningOfDocument, offset: location),
+            let rangeEnd = textInput.position(from: rangeStart, offset: length) {
+            return textInput.textRange(from: rangeStart, to: rangeEnd)
+        }
+        return nil
     }
 }
