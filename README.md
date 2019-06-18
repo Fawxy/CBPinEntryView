@@ -32,6 +32,10 @@ Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. C
 
 Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
 
+### Entry callbacks
+
+There are two delegate methods `entryChanged(_ completed: Bool)` and `entryCompleted(with entry: String?)`. The first will let you know each time the entry is changed, and whether they have completed the entry. The second function will get called when the user fills out the entry to completion and the entered pin will be passed.
+
 ### Secure entry
 
 Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
