@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/cocoapods/l/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
 [![Platform](https://img.shields.io/cocoapods/p/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
 
-CBPinEntryView is a view written in Swift to allow easy and slick entry of pins or codes. It allows backspacing, dismissal of keyboard and continuing where you left off, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard.
+CBPinEntryView is a view written in Swift to allow easy and slick entry of pins, codes or passwords. It allows backspacing, dismissal of keyboard and continuing where you left off, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard.
 
 ## Preview
 
@@ -28,11 +28,26 @@ pod "CBPinEntryView"
 ```
 Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. Create an outlet in your file and customise either with the IBInspectable properties or in your code.
 
-Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`. Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
+### Get the code
+
+Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
+
+### Secure entry
+
+Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
+Change the secure entry character by setting the `secureCharacter` property.
+
+### Display errors
 
 There is an error mode which can be enabled with `pinEntryView.setError(isError: true)` and disabled with `pinEntryView.setError(isError: false)`. Whether error mode is enabled can be checked with `pinEntryView.errorMode`. Calling `pinEntryView.resignFirstResponder()` will hide the keyboard and disable the error mode.
 
-Customise keyboard type! The keyboard types are an enum with int raw values. Options are as follows:
+### Allow or restrict characters
+
+Set `allowedEntryTypes` and choose between `any`, `numerical`, `alphanumeric`, `letters` to enable or restrict characters. Set `textFieldCapitalization` to choose what kind of capitalisation you would like on the text field.
+
+### Customise keyboard type!
+
+The keyboard types are an enum with int raw values. Options are as follows:
 
 ```
 0: default // Default type for the current input method.
