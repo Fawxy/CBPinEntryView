@@ -31,7 +31,7 @@
 		1EF36EE374CAFC7442A03421 /* Pods-CBPinEntryView_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CBPinEntryView_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CBPinEntryView_Example/Pods-CBPinEntryView_Example.release.xcconfig"; sourceTree = "<group>"; };
 		2164B9A14BA79EDDC9BA3A44 /* Pods-CBPinEntryView_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CBPinEntryView_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CBPinEntryView_Example/Pods-CBPinEntryView_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		2EAA631FAD3805D87B03B812 /* Pods-CBPinEntryView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CBPinEntryView_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CBPinEntryView_Tests/Pods-CBPinEntryView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		5608D787ADD458FF492581EE /* CBPinEntryView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CBPinEntryView.podspec; path = ../CBPinEntryView.podspec; sourceTree = "<group>"; };
+		5608D787ADD458FF492581EE /* CBPinEntryView.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = CBPinEntryView.podspec; path = ../CBPinEntryView.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* CBPinEntryView_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CBPinEntryView_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -228,6 +228,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

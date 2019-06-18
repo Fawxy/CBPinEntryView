@@ -10,6 +10,7 @@ import UIKit
 
 public protocol CBPinEntryViewDelegate: class {
     func entryChanged(_ completed: Bool)
+    func entryCompleted(with entry: String?)
 }
 
 @IBDesignable open class CBPinEntryView: UIView {
@@ -293,6 +294,9 @@ extension CBPinEntryView: UITextFieldDelegate {
     @objc func textfieldChanged(_ textField: UITextField) {
         let complete: Bool = textField.text!.count == length
         delegate?.entryChanged(complete)
+        if complete {
+            delegate?.entryCompleted(with: textField.text)
+        }
     }
 
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
