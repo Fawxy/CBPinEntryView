@@ -26,6 +26,7 @@ This view allows a user to enter a pin or code (for security/mobile verification
   s.author           = { 'Chris Byatt' => 'byatt.chris@gmail.com' }
   s.source           = { :git => 'https://github.com/Fawxy/CBPinEntryView.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/ChrisByatt'
+  s.swift_version = '4.2'
 
   s.ios.deployment_target = '9.0'
 
