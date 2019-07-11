@@ -15,9 +15,17 @@ public protocol CBPinEntryViewDelegate: class {
 
 @IBDesignable open class CBPinEntryView: UIView {
 
-    @IBInspectable open var length: Int = CBPinEntryViewDefaults.length
+    @IBInspectable open var length: Int = CBPinEntryViewDefaults.length {
+        didSet {
+            commonInit()
+        }
+    }
     
-    @IBInspectable open var spacing: CGFloat = CBPinEntryViewDefaults.spacing
+    @IBInspectable open var spacing: CGFloat = CBPinEntryViewDefaults.spacing {
+        didSet {
+            commonInit()
+        }
+    }
 
     @IBInspectable open var entryCornerRadius: CGFloat = CBPinEntryViewDefaults.entryCornerRadius {
         didSet {
@@ -116,9 +124,16 @@ public protocol CBPinEntryViewDelegate: class {
     open var allowedEntryTypes: AllowedEntryTypes = .numerical
 
 
-    @IBInspectable open var isUnderlined: Bool = false
-    @IBInspectable open var underLineThickness: CGFloat = CBPinEntryViewDefaults.entryUnderlineThickness
-    @IBInspectable open var underLineColor: UIColor = CBPinEntryViewDefaults.entryUnderlineColour
+    @IBInspectable open var isUnderlined: Bool = false {
+        didSet {
+            commonInit()
+        }
+    }
+    @IBInspectable open var underLineThickness: CGFloat = CBPinEntryViewDefaults.entryUnderlineThickness {
+        didSet {
+            commonInit()
+        }
+    }
 
     private var stackView: UIStackView?
     private var textField: UITextField!
@@ -151,6 +166,10 @@ public protocol CBPinEntryViewDelegate: class {
 
 
     private func commonInit() {
+        self.subviews.forEach { view in
+            view.removeFromSuperview()
+        }
+        
         setupStackView()
         setupTextField()
 
@@ -194,7 +213,7 @@ public protocol CBPinEntryViewDelegate: class {
 
             // The text could either be underlined or have a border
             if isUnderlined {
-                button.addBottomBorder(thickness: underLineThickness, color: underLineColor)
+                button.addBottomBorder(thickness: underLineThickness, color: entryDefaultBorderColour)
             } else {
                 button.layer.borderColor = entryDefaultBorderColour.cgColor
                 button.layer.borderWidth = entryBorderWidth
@@ -244,14 +263,22 @@ public protocol CBPinEntryViewDelegate: class {
         if isError {
             errorMode = true
             for button in entryButtons {
-                button.layer.borderColor = entryErrorBorderColour.cgColor
-                button.layer.borderWidth = entryBorderWidth
+                if isUnderlined {
+                    button.viewWithTag(9999)?.backgroundColor = entryErrorBorderColour
+                } else {
+                    button.layer.borderColor = entryErrorBorderColour.cgColor
+                    button.layer.borderWidth = entryBorderWidth
+                }
             }
         } else {
             errorMode = false
             for button in entryButtons {
+                if isUnderlined {
+                    button.viewWithTag(9999)?.backgroundColor = entryDefaultBorderColour
+                } else {
                 button.layer.borderColor = entryDefaultBorderColour.cgColor
                 button.backgroundColor = entryBackgroundColour
+                }
             }
         }
     }

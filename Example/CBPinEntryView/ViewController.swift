@@ -19,12 +19,6 @@ class ViewController: UIViewController {
     }
     @IBOutlet var stringOutputLabel: UILabel!
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Underline" {
-            (segue.destination as! ViewController).isUnderlined = true
-        }
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if #available(iOS 12, *) {
@@ -49,9 +43,20 @@ class ViewController: UIViewController {
     @IBAction func pressedClear(_ sender: UIButton) {
         pinEntryView.clearEntry()
     }
+    @IBAction func pressedUnderline(_ sender: UIButton) {
+        if pinEntryView.isUnderlined {
+            pinEntryView.isUnderlined = false
+        } else {
+            pinEntryView.isUnderlined = true
+        }
+    }
 }
 
 extension ViewController: CBPinEntryViewDelegate {
+    func entryCompleted(with entry: String?) {
+        print(entry)
+    }
+
     func entryChanged(_ completed: Bool) {
         if completed {
             print(pinEntryView.getPinAsString())
