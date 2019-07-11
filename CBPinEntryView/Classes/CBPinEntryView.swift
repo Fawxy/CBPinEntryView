@@ -129,11 +129,6 @@ public protocol CBPinEntryViewDelegate: class {
             commonInit()
         }
     }
-    @IBInspectable open var underLineThickness: CGFloat = CBPinEntryViewDefaults.entryUnderlineThickness {
-        didSet {
-            commonInit()
-        }
-    }
 
     private var stackView: UIStackView?
     private var textField: UITextField!
@@ -213,7 +208,7 @@ public protocol CBPinEntryViewDelegate: class {
 
             // The text could either be underlined or have a border
             if isUnderlined {
-                button.addBottomBorder(thickness: underLineThickness, color: entryDefaultBorderColour)
+                button.addBottomBorder(thickness: entryBorderWidth, color: entryDefaultBorderColour)
             } else {
                 button.layer.borderColor = entryDefaultBorderColour.cgColor
                 button.layer.borderWidth = entryBorderWidth

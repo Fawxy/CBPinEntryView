@@ -111,7 +111,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="mvL-AI-BDV"/>
                     <connections>
-                        <outlet property="pinEntryView" destination="8mn-8t-3Ic" id="1gi-9O-nO0"/>
+                        <outlet property="pinEntryView" destination="8mn-8t-3Ic" id="bmr-QA-0a6"/>
                         <outlet property="stringOutputLabel" destination="pjq-79-3tQ" id="3UZ-tJ-wlZ"/>
                     </connections>
                 </viewController>
