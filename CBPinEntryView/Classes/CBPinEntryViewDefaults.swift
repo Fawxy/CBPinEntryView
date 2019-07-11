@@ -43,6 +43,12 @@ struct CBPinEntryViewDefaults {
     // Default font for entry fields
     static let entryFont: UIFont = UIFont.systemFont(ofSize: 16)
 
+    // Default bottom line thickness
+    static let entryUnderlineThickness: CGFloat = 1
+
+    // Default colour for the bottom line
+    static let entryUnderlineColour: UIColor = UIColor.darkText
+
     static let isSecure: Bool = false
 
     static let secureCharacter: String = "●"

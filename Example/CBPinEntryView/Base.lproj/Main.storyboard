@@ -85,6 +85,13 @@
                                     <action selector="pressedClear:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="s4X-QJ-IXz"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fc0-2g-qcq">
+                                <rect key="frame" x="127" y="298" width="67" height="30"/>
+                                <state key="normal" title="Underline"/>
+                                <connections>
+                                    <segue destination="JRg-yk-UTB" kind="show" identifier="Underline" id="hPK-l6-X6v"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.94509803920000002" green="0.96078431369999995" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -100,6 +107,7 @@
                             <constraint firstItem="qcc-XO-4s7" firstAttribute="top" secondItem="e7G-Qq-ufL" secondAttribute="bottom" constant="20" id="tyB-mB-qJl"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="mvL-AI-BDV"/>
                     <connections>
                         <outlet property="pinEntryView" destination="8mn-8t-3Ic" id="1gi-9O-nO0"/>
                         <outlet property="stringOutputLabel" destination="pjq-79-3tQ" id="3UZ-tJ-wlZ"/>
@@ -107,6 +115,81 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1031.25" y="669.71830985915494"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="mIg-S5-jFD">
+            <objects>
+                <viewController id="JRg-yk-UTB" customClass="ViewController" customModule="CBPinEntryView_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RJ4-h5-JW2"/>
+                        <viewControllerLayoutGuide type="bottom" id="geW-AH-VRk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zjr-k2-rsM">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B6M-3H-LFg" customClass="CBPinEntryView" customModule="CBPinEntryView">
+                                <rect key="frame" x="75" y="122" width="170" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="91o-3N-H4c"/>
+                                    <constraint firstAttribute="width" constant="170" id="xXM-9z-Gqd"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="length">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="entryCornerRadius">
+                                        <real key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="entryDefaultBorderColour">
+                                        <color key="value" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="keyboardType">
+                                        <integer key="value" value="0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isUnderlined" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="underLineColor">
+                                        <color key="value" red="0.52156862749999999" green="0.52156862749999999" blue="0.52156862749999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="underLineThickness">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="B6M-3H-LFg" firstAttribute="centerX" secondItem="zjr-k2-rsM" secondAttribute="centerX" id="1Kd-sj-OQo"/>
+                            <constraint firstItem="B6M-3H-LFg" firstAttribute="centerY" secondItem="zjr-k2-rsM" secondAttribute="centerY" multiplier="0.5" id="EEW-27-NPj"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="pinEntryView" destination="B6M-3H-LFg" id="0la-2R-Hm3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dKL-1Y-xPt" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1815" y="670"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="y4m-BQ-MR0">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Dse-4C-KPH" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="rHm-64-UpB">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="aPH-EK-Qxv"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cau-T5-2yx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="244" y="670"/>
         </scene>
     </scenes>
 </document>

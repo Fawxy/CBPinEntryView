@@ -116,6 +116,10 @@ public protocol CBPinEntryViewDelegate: class {
     open var allowedEntryTypes: AllowedEntryTypes = .numerical
 
 
+    @IBInspectable open var isUnderlined: Bool = false
+    @IBInspectable open var underLineThickness: CGFloat = CBPinEntryViewDefaults.entryUnderlineThickness
+    @IBInspectable open var underLineColor: UIColor = CBPinEntryViewDefaults.entryUnderlineColour
+
     private var stackView: UIStackView?
     private var textField: UITextField!
 
@@ -186,10 +190,15 @@ public protocol CBPinEntryViewDelegate: class {
             button.backgroundColor = entryBackgroundColour
             button.setTitleColor(entryTextColour, for: .normal)
             button.titleLabel?.font = entryFont
-
             button.layer.cornerRadius = entryCornerRadius
-            button.layer.borderColor = entryDefaultBorderColour.cgColor
-            button.layer.borderWidth = entryBorderWidth
+
+            // The text could either be underlined or have a border
+            if isUnderlined {
+                button.addBottomBorder(thickness: underLineThickness, color: underLineColor)
+            } else {
+                button.layer.borderColor = entryDefaultBorderColour.cgColor
+                button.layer.borderWidth = entryBorderWidth
+            }
 
             button.tag = i + 1
 
@@ -363,5 +372,24 @@ extension CBPinEntryView: UITextFieldDelegate {
         }
 
         return newLength <= length
+    }
+}
+
+extension UIButton {
+    func addBottomBorder(thickness: CGFloat, color: UIColor, cornerRadius: CGFloat = 8) {
+        guard viewWithTag(9999) == nil else {
+            return
+        }
+
+        let line = UIView()
+        line.tag = 9999
+        line.backgroundColor = color
+        line.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(line)
+
+        line.heightAnchor.constraint(equalToConstant: thickness).isActive = true
+        line.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        line.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        line.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
     }
 }
