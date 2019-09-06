@@ -97,7 +97,13 @@ public protocol CBPinEntryViewDelegate: class {
 
     @IBInspectable open var secureCharacter: String = CBPinEntryViewDefaults.secureCharacter
 
-    @IBInspectable open var keyboardType: Int = CBPinEntryViewDefaults.keyboardType
+    @IBInspectable open var keyboardType: Int = CBPinEntryViewDefaults.keyboardType {
+        didSet {
+            if oldValue != keyboardType {
+                updateTextFieldStyles()
+            }
+        }
+    }
     
     open var textContentType: UITextContentType? {
         didSet {
@@ -190,12 +196,15 @@ public protocol CBPinEntryViewDelegate: class {
     private func setupTextField() {
         textField = UITextField(frame: bounds)
         textField.delegate = self
-        textField.keyboardType = UIKeyboardType(rawValue: keyboardType) ?? .numberPad
         textField.addTarget(self, action: #selector(textfieldChanged(_:)), for: .editingChanged)
 
         self.addSubview(textField)
 
         textField.isHidden = true
+    }
+    
+    func updateTextFieldStyles() {
+        textField.keyboardType = UIKeyboardType(rawValue: keyboardType) ?? .numberPad
     }
 
     private func createButtons() {
