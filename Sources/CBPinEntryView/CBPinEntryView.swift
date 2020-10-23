@@ -1,11 +1,9 @@
 //
 //  CBPinEntryView.swift
-//  Pods
+//  CBPinEntry
 //
-//  Created by Chris Byatt on 18/03/2017.
+//  Created by Aalok Parikh on 10/23/20.
 //
-//
-
 import UIKit
 
 public protocol CBPinEntryViewDelegate: class {
@@ -206,6 +204,14 @@ public protocol CBPinEntryViewDelegate: class {
             button.titleLabel?.font = entryFont
             button.layer.cornerRadius = entryCornerRadius
 
+            // ADDED BY VISHAL
+            button.layer.cornerRadius = 5
+            button.sshadowColor = .black
+            button.sshadowOffset = .zero
+            button.sshadowOpacity = 0.15
+            button.sshadowRadius = 3
+            // *************************
+            
             // The text could either be underlined or have a border
             if isUnderlined {
                 button.addBottomBorder(thickness: entryBorderWidth, color: entryDefaultBorderColour)
@@ -234,6 +240,16 @@ public protocol CBPinEntryViewDelegate: class {
             button.layer.borderWidth = entryBorderWidth
         }
     }
+    
+    func setShadowOffset(_ shadowColor: CGColor, offset: CGSize, shadowOpacity: Float, shadowRadius: CGFloat, cornerRadius: CGFloat) {
+        for button in entryButtons {
+            button.layer.shadowColor = shadowColor
+            button.layer.shadowOffset = offset
+            button.layer.shadowOpacity = shadowOpacity
+            button.layer.shadowRadius = shadowRadius
+            button.layer.cornerRadius = cornerRadius
+        }
+    }
 
     @objc private func didPressCodeButton(_ sender: UIButton) {
         errorMode = false
@@ -252,6 +268,8 @@ public protocol CBPinEntryViewDelegate: class {
         }
         
         textField.becomeFirstResponder()
+        
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = true
     }
 
     open func setError(isError: Bool) {
@@ -316,6 +334,8 @@ public protocol CBPinEntryViewDelegate: class {
         super.resignFirstResponder()
         
         setError(isError: false)
+        
+        IQKeyboardManager.shared.shouldResignOnTouchOutside = false
         
         return textField.resignFirstResponder()
     }
