@@ -14,6 +14,18 @@ public protocol CBPinEntryViewDelegate: class {
 }
 
 @IBDesignable open class CBPinEntryView: UIView {
+    
+    /// Pin's backgroundColor when filled with a secure entry.
+    /// clear color is the default value
+    
+    @IBInspectable
+    open var filledEntryColour: UIColor = .clear {
+        didSet {
+            if oldValue != filledEntryColour {
+                updateButtonStyles()
+            }
+        }
+    }
 
     @IBInspectable open var length: Int = CBPinEntryViewDefaults.length {
         didSet {
@@ -363,6 +375,7 @@ extension CBPinEntryView: UITextFieldDelegate {
             for button in entryButtons {
                 if button.tag == newLength {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
+                    button.backgroundColor = filledEntryColour
                     UIView.setAnimationsEnabled(false)
                     if !isSecure {
                         button.setTitle(string, for: .normal)
@@ -375,7 +388,7 @@ extension CBPinEntryView: UITextFieldDelegate {
                     button.backgroundColor = entryEditingBackgroundColour
                 } else {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    button.backgroundColor = entryBackgroundColour
+                    button.backgroundColor = button.tag < newLength ? filledEntryColour : entryBackgroundColour
                 }
             }
         } else {
@@ -388,7 +401,7 @@ extension CBPinEntryView: UITextFieldDelegate {
                     UIView.setAnimationsEnabled(true)
                 } else {
                     button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    button.backgroundColor = entryBackgroundColour
+                    button.backgroundColor = button.tag <= newLength ? filledEntryColour : entryBackgroundColour
                 }
             }
         }
