@@ -137,7 +137,7 @@ public protocol CBPinEntryViewDelegate: class {
     }
 
     private var stackView: UIStackView?
-    private var textField: UITextField!
+    private var textField: CBEntryViewTextField!
 
     open var errorMode: Bool = false
 
@@ -194,13 +194,22 @@ public protocol CBPinEntryViewDelegate: class {
     }
 
     private func setupTextField() {
-        textField = UITextField(frame: bounds)
+        textField = CBEntryViewTextField(frame: bounds)
         textField.delegate = self
         textField.addTarget(self, action: #selector(textfieldChanged(_:)), for: .editingChanged)
 
+        textField.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(textField)
 
-        textField.isHidden = true
+        textField!.leadingAnchor.constraint(equalTo: stackView!.leadingAnchor, constant: 0).isActive = true
+        textField!.trailingAnchor.constraint(equalTo: stackView!.trailingAnchor, constant: 0).isActive = true
+        textField!.topAnchor.constraint(equalTo: stackView!.topAnchor, constant: 0).isActive = true
+        textField!.bottomAnchor.constraint(equalTo: stackView!.bottomAnchor, constant: 0).isActive = true
+
+        //textField.isHidden = true
+        textField.backgroundColor = .clear
+        textField.textColor = .clear
+        textField.tintColor = .clear
     }
     
     func updateTextFieldStyles() {
@@ -338,7 +347,7 @@ extension CBPinEntryView: UITextFieldDelegate {
             delegate?.entryCompleted(with: textField.text)
         }
     }
-
+    
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         errorMode = false
         for button in entryButtons {
@@ -369,22 +378,43 @@ extension CBPinEntryView: UITextFieldDelegate {
         let newLength = oldLength - rangeLength + replacementLength
 
         if !deleting {
-            for button in entryButtons {
-                if button.tag == newLength {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    UIView.setAnimationsEnabled(false)
-                    if !isSecure {
-                        button.setTitle(string, for: .normal)
+            if replacementLength == 1 {
+                for button in entryButtons {
+                    if button.tag == newLength {
+                        UIView.setAnimationsEnabled(false)
+                        button.layer.borderColor = entryDefaultBorderColour.cgColor
+                        if !isSecure {
+                            button.setTitle(string, for: .normal)
+                        } else {
+                            button.setTitle(secureCharacter, for: .normal)
+                        }
+                        UIView.setAnimationsEnabled(true)
+                    } else if button.tag == newLength + 1 {
+                        button.layer.borderColor = entryBorderColour.cgColor
+                        button.backgroundColor = entryEditingBackgroundColour
                     } else {
-                        button.setTitle(secureCharacter, for: .normal)
+                        button.layer.borderColor = entryDefaultBorderColour.cgColor
+                        button.backgroundColor = entryBackgroundColour
                     }
-                    UIView.setAnimationsEnabled(true)
-                } else if button.tag == newLength + 1 {
+                }
+            } else {
+                UIView.setAnimationsEnabled(false)
+                for i in 0..<replacementLength {
+                    let buttonIndex = oldLength + i + 1
+                    entryButtons.filter({ $0.tag == buttonIndex }).forEach { (button: UIButton) in
+                        button.layer.borderColor = entryDefaultBorderColour.cgColor
+                        if !isSecure {
+                            button.setTitle(string[i], for: .normal)
+                        } else {
+                            button.setTitle(secureCharacter, for: .normal)
+                        }
+                    }
+                }
+                UIView.setAnimationsEnabled(true)
+                let buttonIndex = newLength + 1
+                entryButtons.filter({ $0.tag == buttonIndex }).forEach { (button: UIButton) in
                     button.layer.borderColor = entryBorderColour.cgColor
                     button.backgroundColor = entryEditingBackgroundColour
-                } else {
-                    button.layer.borderColor = entryDefaultBorderColour.cgColor
-                    button.backgroundColor = entryBackgroundColour
                 }
             }
         } else {
@@ -422,5 +452,15 @@ extension UIButton {
         line.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         line.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         line.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+    }
+}
+
+class CBEntryViewTextField: UITextField {
+    open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        return (action == #selector(UIResponderStandardEditActions.paste(_:)))
+    }
+    
+    override func canPaste(_ itemProviders: [NSItemProvider]) -> Bool {
+        return true
     }
 }
