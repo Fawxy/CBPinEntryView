@@ -320,6 +320,26 @@ public protocol CBPinEntryViewDelegate: class {
         return textField.text!
     }
     
+    open func updateSecurityCharacters() {
+        if let text = textField.text {
+            for button in entryButtons { //0
+                let lenght = text.count
+                if !text.isEmpty {
+                    for i in 0...(lenght) {
+                        if button.tag == i {
+                            if !isSecure {
+                                let char = text[text.index(text.startIndex, offsetBy: i - 1)]
+                                button.setTitle(String(char), for: .normal)
+                            } else {
+                                button.setTitle(secureCharacter, for: .normal)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+    
     @discardableResult open override func becomeFirstResponder() -> Bool {
         super.becomeFirstResponder()
         
