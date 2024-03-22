@@ -9,9 +9,12 @@
 import UIKit
 import Foundation
 import AVFoundation
-//import MBProgressHUD
+import MBProgressHUD
 import MapKit
 import Photos
+
+let SCREEN_HEIGHT = UIScreen.main.bounds.height
+let SCREEN_WIDTH = UIScreen.main.bounds.width
 
 extension UIImage {
     
@@ -210,7 +213,7 @@ extension StringProtocol where Index == String.Index {
     }
     
     convenience init (hex:String) {
-        var cString:String = hex.trim().uppercased()
+        var cString: String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         
         if (cString.hasPrefix("#")) {
             cString = (cString as NSString).substring(from: 1)
@@ -799,10 +802,10 @@ extension UIView {
     }
     
     
-    func resizeByHeight(text:String, font:UIFont) {
-        
-        height = max(self.frame.size.height, text.heightWithConstrainedWidth(width: self.frame.size.width, font: font) + 2)
-    }
+//    func resizeByHeight(text:String, font:UIFont) {
+//        
+//        height = max(self.frame.size.height, text.heightWithConstrainedWidth(width: self.frame.size.width, font: font) + 2)
+//    }
     
     /// Get view's parent view controller
     @objc var topViewController: UIViewController? {
@@ -926,6 +929,8 @@ extension UIResponder {
 }
 
 //MARK: - UIApplication
+
+import UIKit
 
 extension UIApplication {
     
@@ -1152,6 +1157,16 @@ extension UIViewController {
 
 //MARK: - NSMutableAttributedString
 
+extension String {
+    func nsRange(from range: Range<String.Index>) -> NSRange {
+        let utf16View = self.utf16
+        let start = range.lowerBound.samePosition(in: utf16View)!
+        let end = range.upperBound.samePosition(in: utf16View)!
+        return NSRange(location: utf16View.distance(from: utf16View.startIndex, to: start),
+                       length: utf16View.distance(from: start, to: end))
+    }
+}
+
 public extension NSMutableAttributedString {
     
     func addColor(color:UIColor?, substring:String) {
@@ -1339,23 +1354,23 @@ extension Array where Element: Equatable
      self = objGroupList as! Array<Element>
      }*/
     
-    mutating func groupList(UsingKey key: String, Tiles: [String]) {
-        
-        var objGroupList: [JSON] = [JSON]()
-        
-        for title in Tiles {
-            
-            let templist = (self as! [JSON]).filter{$0[key].stringValue == title}
-            
-            objGroupList.append([
-                key:title,
-                "isopen":"0",
-                "list":templist
-            ])
-        }
-        
-        self = objGroupList as! Array<Element>
-    }
+//    mutating func groupList(UsingKey key: String, Tiles: [String]) {
+//        
+//        var objGroupList: [JSON] = [JSON]()
+//        
+//        for title in Tiles {
+//            
+//            let templist = (self as! [JSON]).filter{$0[key].stringValue == title}
+//            
+//            objGroupList.append([
+//                key:title,
+//                "isopen":"0",
+//                "list":templist
+//            ])
+//        }
+//        
+//        self = objGroupList as! Array<Element>
+//    }
 }
 
 //MARK: - UITableView

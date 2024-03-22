@@ -5,8 +5,9 @@
 //  Created by Aalok Parikh on 10/23/20.
 //
 import UIKit
+import IQKeyboardManagerSwift
 
-public protocol CBPinEntryViewDelegate: class {
+public protocol CBPinEntryViewDelegate: AnyObject {
     func entryChanged(_ completed: Bool)
     func entryCompleted(with entry: String?)
 }
