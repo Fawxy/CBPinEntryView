@@ -45,17 +45,28 @@ particular look or animation.
   automatically — no convenience initialiser needed. Defaults use semantic
   system colours. Hard rule: never snapshot a `Color` to `CGColor`/`UIColor`
   (that would freeze the appearance — the bug in the old UIKit code).
-- **Customisable look/animation, not opinionated:** Expose a `PinEntryCellStyle`
-  protocol (modelled on `ButtonStyle`) whose configuration hands the user each
-  cell's state (`character`, `index`, `isFocused`, `isFilled`, `isError`) so they
-  render and animate cells however they like. The library ships exactly **one**
-  unbranded default conformance — needed only so `PinEntryView(pin:)` renders
-  something out of the box with zero configuration (SwiftUI environment keys
-  require a default value). It is not positioned as "option 1 of a supported
-  set" — there is no curated style gallery, no `.boxed`/`.underlined` presets.
-  An underlined look, or anything else, is a `PinEntryCellStyle` a consumer
-  writes themselves; the example app includes one as a recipe, not as shipped
-  library code. No baked-in shake/flash animation.
+- **Customisable look/animation, not opinionated:** Expose cell rendering as a
+  `@ViewBuilder` content closure, `(PinEntryCellState) -> some View`, rather
+  than a `ButtonStyle`-like protocol. Considered and rejected the protocol
+  approach: Apple reserves that pattern for reskinning *system controls that
+  keep their own built-in interactive behaviour* (`Button`, `Toggle`); our
+  cells have no independent behaviour of their own — they're a pure rendering
+  of state computed by the parent — which is exactly the case SwiftUI itself
+  handles with a content closure (`List`, `ForEach`, `Picker` rows), not a
+  style protocol. A closure also needs no new type declared by the consumer.
+  Reuse across multiple `PinEntryView`s is still trivial without any
+  library-specific "theme" mechanism — a consumer writes one plain function
+  returning `some View` and passes it by name at each call site
+  (`PinEntryView(pin: $pin, cell: myPinCell)`); the only capability actually
+  lost versus an environment-based style is *silent* inheritance by
+  descendants that don't mention it at all, judged not worth the extra
+  protocol/environment-key/modifier machinery for a component typically used
+  once or twice per screen. The library ships exactly **one** default cell
+  view, used only by a zero-argument convenience initialiser so
+  `PinEntryView(pin:)` renders something out of the box — not positioned as
+  "option 1 of a supported set." An underlined look, or anything else, is a
+  closure a consumer writes themselves; the example app includes one as a
+  recipe, not as shipped library code. No baked-in shake/flash animation.
 - **State-driven, not imperative:** `PinEntryView` is a `struct View` re-created
   from the parent's state on every render — there is no persistent instance to
   call methods on, so every legacy imperative member is replaced by state the
@@ -103,17 +114,18 @@ Reference: `CBPinEntryView/Classes/CBPinEntryView.swift` +
 
 - Configurable `length` (default 4) and `spacing` (10).
 - Two visual styles: boxed (full border) and underlined. The *capability* is
-  preserved — either look (or any other) is achievable via `PinEntryCellStyle`
-  — but neither is a boolean mode baked into `PinEntryView`; see the Design
-  section. The legacy `isUnderlined: Bool` property itself is preserved only on
-  the UIKit shim, for backwards compatibility.
+  preserved — either look (or any other) is achievable as a cell content
+  closure — but neither is a boolean mode baked into `PinEntryView`; see the
+  Design section. The legacy `isUnderlined: Bool` property itself is preserved
+  only on the UIKit shim, for backwards compatibility.
 - Per-state styling with these defaults: normal background white, text
   `darkText`, corner radius 3, border width 1, default border `.clear`, editing
   border `rgb(69,78,86)`, editing background `rgb(135,154,168)`, filled
   background (`filledEntryColour`, default `.clear`), error border `.red`, font
-  system 16. These become `DefaultPinEntryCellStyle`'s own default initialiser
-  values (see Design) — a consumer who just wants one or two colours tweaked
-  can override them there without writing a custom `PinEntryCellStyle`.
+  system 16. These become `DefaultPinEntryCell`'s own default initialiser
+  values (see Design) — a consumer who wants a few colours tweaked can
+  instantiate it directly inside their own closure with different arguments,
+  without needing to build a look from scratch.
 - Secure entry (`isSecure`) with customisable `secureCharacter` (default `●`).
 - Allowed entry types: `any` / `numerical` / `alphanumeric` / `letters`.
 - Keyboard type (default `.numberPad`); real `UIKeyboardType` on the new view,
@@ -144,8 +156,9 @@ Reference: `CBPinEntryView/Classes/CBPinEntryView.swift` +
 - **Configurable haptics** on entry, completion, and error.
 - **Adaptive colour**: accept SwiftUI `Color` and render it directly so
   asset/semantic colours track light/dark automatically.
-- **Customisable cell rendering** via `PinEntryCellStyle` (user-owned
-  animations, e.g. shake-on-error or fill transitions).
+- **Customisable cell rendering** via a plain `@ViewBuilder` closure over
+  `PinEntryCellState` (user-owned animations, e.g. shake-on-error or fill
+  transitions) — no protocol to declare, no environment key.
 - **API simplification**: dropping the delegate protocol and four imperative
   methods (`clearEntry`, `setError`, `becomeFirstResponder`,
   `resignFirstResponder`) from the new view in favour of state the parent
@@ -176,42 +189,54 @@ behaviour without bespoke keystroke handling.
 
 ### New files — `Sources/CBPinEntryView/`
 
-- **`PinEntryView.swift`** — public SwiftUI view.
+- **`PinEntryView.swift`** — public SwiftUI view, generic over its cell content:
   ```swift
-  PinEntryView(
-      pin: Binding<String>,
-      length: Int = 4,
-      spacing: CGFloat = 10,
-      isError: Binding<Bool> = .constant(false),
-      onComplete: ((String) -> Void)? = nil
-  )
+  struct PinEntryView<CellContent: View>: View {
+      init(
+          pin: Binding<String>,
+          length: Int = 4,
+          spacing: CGFloat = 10,
+          isError: Binding<Bool> = .constant(false),
+          onComplete: ((String) -> Void)? = nil,
+          @ViewBuilder cell: @escaping (PinEntryCellState) -> CellContent
+      )
+  }
+
+  extension PinEntryView where CellContent == DefaultPinEntryCell {
+      init(
+          pin: Binding<String>,
+          length: Int = 4,
+          spacing: CGFloat = 10,
+          isError: Binding<Bool> = .constant(false),
+          onComplete: ((String) -> Void)? = nil
+      ) // supplies DefaultPinEntryCell as `cell`, so PinEntryView(pin:) alone works
+  }
   ```
   Plus a parent-suppliable `FocusState<Bool>.Binding` for programmatic
   focus/blur (exact plumbing — init parameter vs. `.focused(_:)`-style modifier
   — decided during implementation). `spacing` controls inter-cell layout (the
-  `HStack`'s spacing) and stays a plain initialiser parameter rather than a
-  `PinEntryCellStyle` concern, since it's cross-cell layout, not a single
-  cell's own rendering. Further behavioural options (allowed type, secure,
-  keyboard type, content type, capitalisation, haptics on/off) via initialiser
-  params and/or view modifiers. Holds the invisible `TextField`; renders cells
-  via the cell style resolved from the environment. `.onChange(of: pin)` runs
-  the reducer and resets `isError` to `false` on any change.
-- **`PinEntryCellStyle.swift`** — the non-opinionated customisation point.
-  `protocol PinEntryCellStyle` (à la `ButtonStyle`) with
-  `func makeBody(configuration: Configuration) -> some View`; `Configuration`
-  exposes `character: String?` (already masked when secure), `index`,
-  `isFocused`, `isFilled`, `isError`. `.pinEntryCellStyle(_:)` modifier stores it
-  in the environment. Users implement their own visuals + `.animation(...)`
-  here.
-- **`DefaultPinEntryCellStyle.swift`** — the single built-in conformance, used
-  automatically when no style is set (SwiftUI environment keys require a
-  default value). A bordered-box look matching the legacy default, configurable
-  via initialiser (colours per state, corner radius, border width, font) so
-  restyling needs no custom protocol conformance for simple cases. Not exposed
-  as part of a curated preset gallery (no `.boxed`/`.underlined` dot-syntax) —
-  it is simply what you get before you supply your own style. An underlined
-  look is demonstrated only in the example app, as a `PinEntryCellStyle` a
-  consumer writes themselves (see Example section).
+  `HStack`'s spacing), not a single cell's own rendering, so it stays a plain
+  initialiser parameter rather than something threaded through `cell`. Further
+  behavioural options (allowed type, secure, keyboard type, content type,
+  capitalisation, haptics on/off) via initialiser params and/or view modifiers.
+  Holds the invisible `TextField`; calls `cell(_:)` once per index to render
+  each cell. `.onChange(of: pin)` runs the reducer and resets `isError` to
+  `false` on any change.
+- **`PinEntryCellState.swift`** — the non-opinionated customisation point: a
+  plain public struct (not a protocol) exposing `character: String?` (already
+  masked when secure), `index: Int`, `isFocused: Bool`, `isFilled: Bool`,
+  `isError: Bool`. Passed into the `cell` closure; the consumer's closure body
+  is free to branch on these and apply whatever modifiers/animations they like
+  — no type to declare, no conformance.
+- **`DefaultPinEntryCell.swift`** — a small, ordinary `View` (not a style
+  conformance) matching the legacy default box look, configurable via
+  initialiser (colours per state, corner radius, border width, font). Used
+  automatically by the zero-cell-argument convenience initialiser above,
+  and reusable directly inside a consumer's own closure for minor tweaks
+  (`DefaultPinEntryCell(state: state, backgroundColor: .gray)`) without
+  building a look from scratch. An underlined look is demonstrated only in the
+  example app, as a plain closure a consumer writes themselves (see Example
+  section).
 - **`AllowedEntryType.swift`** — public enum `any`/`numerical`/`alphanumeric`/
   `letters` with a pure `func sanitize(_ input: String) -> String`
   (per-character filtering — robust for paste; this is an improved semantic
@@ -236,14 +261,14 @@ behaviour without bespoke keystroke handling.
   surface onto the new state-driven one.
 - Internally holds its own `@State` pin string, `@State` error flag, and
   `@FocusState`, wired to the hosted `PinEntryView`'s bindings. Maps legacy
-  `UIColor`/`UIFont` properties into a `DefaultPinEntryCellStyle`, maps the
-  legacy raw `Int` `keyboardType` into the real `UIKeyboardType`, and forwards
-  binding changes to the delegate to reproduce `entryChanged`/`entryCompleted`.
-  For `isUnderlined = true` the shim swaps in a small `PinEntryCellStyle`
-  conformance private to `Legacy/` (not part of the public library API) that
-  reproduces the old underlined look — since the public library no longer
-  ships an underlined preset, this bit of legacy-only rendering code lives
-  solely here, scoped to backwards compatibility.
+  `UIColor`/`UIFont` properties into `DefaultPinEntryCell`'s initialiser, maps
+  the legacy raw `Int` `keyboardType` into the real `UIKeyboardType`, and
+  forwards binding changes to the delegate to reproduce
+  `entryChanged`/`entryCompleted`. For `isUnderlined = true` the shim supplies
+  its own small cell closure private to `Legacy/` (not part of the public
+  library API) that reproduces the old underlined look — since the public
+  library no longer ships an underlined look, this bit of legacy-only
+  rendering code lives solely here, scoped to backwards compatibility.
 - Keeps `@IBInspectable` so storyboard property-setting works at runtime.
   Note: `@IBDesignable` *live* Interface Builder rendering is not preserved
   (SwiftUI hosted content) — the one accepted, documented regression.
@@ -271,10 +296,11 @@ Replace the CocoaPods/storyboard UIKit demo with a SwiftUI app (SwiftUI `App`
 lifecycle) that depends on the root package as a local SPM package and
 exercises every feature: length, secure toggle, error toggle (via its own
 `@State` driving `isError`), allowed-type picker, clear (by resetting its own
-`pin` state), programmatic focus (via `@FocusState`), and a custom
-`PinEntryCellStyle` recipe rendering an underlined look — demonstrating both
-the extensibility point and that the removed `.underlined` preset is trivially
-reproducible by a consumer.
+`pin` state), programmatic focus (via `@FocusState`), and a custom `cell`
+closure recipe rendering an underlined look — demonstrating both the
+extensibility point and that the removed underlined preset is trivially
+reproducible by a consumer, reused across more than one call site by
+referencing the same function.
 
 ### Repo cleanup / packaging
 
@@ -296,15 +322,16 @@ reproducible by a consumer.
 Overview + guiding principle (robust core, non-opinionated customisation);
 architecture (SwiftUI-first + UIKit shim, zero dependencies, iOS 17, pfw
 patterns applied, state-driven not imperative); file map; public API — SwiftUI
-`PinEntryView` (`pin`/`isError` bindings, focus binding, `onComplete`), the
-`PinEntryCellStyle` protocol + `.pinEntryCellStyle(_:)`,
-`DefaultPinEntryCellStyle`, the haptics flag, and the legacy `CBPinEntryView`;
-note that colours track light/dark automatically (pass asset/semantic
-`Color`s); how to build & test (`swift test` / xcodebuild); how to run the
-SwiftUI example; conventions (no external dependencies, iOS defaults; how to
-add a new config option in the reducer, the SwiftUI view, the default style,
-and the shim; how a consumer writes a custom cell style with their own
-animation, e.g. reproducing an underlined look).
+`PinEntryView` (`pin`/`isError` bindings, focus binding, `onComplete`, the
+`cell` content closure), `PinEntryCellState`, `DefaultPinEntryCell`, the
+haptics flag, and the legacy `CBPinEntryView`; note that colours track
+light/dark automatically (pass asset/semantic `Color`s); how to build & test
+(`swift test` / xcodebuild); how to run the SwiftUI example; conventions (no
+external dependencies, iOS defaults; how to add a new config option in the
+reducer, the SwiftUI view, the default cell, and the shim; how a consumer
+writes a custom cell closure with their own animation, e.g. reproducing an
+underlined look, and how to reuse one closure across multiple `PinEntryView`
+call sites by extracting it to a plain function).
 
 ## Verification
 
@@ -318,11 +345,11 @@ animation, e.g. reproducing an underlined look).
   clearing), allowed-type restriction, `.oneTimeCode` autofill, and reading the
   pin directly from the example's own `@State`.
 - Confirm the new capabilities: haptics fire and can be disabled; the default
-  style adapts to light/dark; a custom `PinEntryCellStyle` in the example
-  renders an underlined look and animates using the exposed cell state;
+  cell adapts to light/dark; a custom `cell` closure in the example renders an
+  underlined look and animates using the exposed `PinEntryCellState`;
   programmatic focus via the example's own `@FocusState`; clearing via
   `pin = ""` alone re-renders correctly with no separate reset call.
 - Sanity-check the shim compiles against the old call sites (the former
   `ViewController` usage: outlet + delegate + `getPinAsString`/`setError`/
   `clearEntry`/`resignFirstResponder`) and that `isUnderlined` still renders the
-  legacy underlined look via the shim's private style.
+  legacy underlined look via the shim's private cell closure.
