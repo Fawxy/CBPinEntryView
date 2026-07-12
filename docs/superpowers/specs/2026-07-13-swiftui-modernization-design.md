@@ -67,6 +67,22 @@ particular look or animation.
   "option 1 of a supported set." An underlined look, or anything else, is a
   closure a consumer writes themselves; the example app includes one as a
   recipe, not as shipped library code. No baked-in shake/flash animation.
+- **Shim customisation is UIKit-native, not a reused SwiftUI closure:**
+  forcing a UIKit-only consumer to write SwiftUI (`View`, `body`) just to
+  restyle a cell isn't genuine backwards compatibility. Instead the shim
+  exposes `PinEntryCellRepresentable` — a `UIView`-based protocol with
+  `func update(with state: PinEntryCellState)`, the same shape as configuring
+  a reusable collection/table view cell — plus a settable `cellType` property.
+  The shim bridges a custom cell into the hosted SwiftUI content via a small
+  `UIViewRepresentable` wrapper that creates the cell once and calls
+  `update(with:)` on state changes (not recreated every keystroke). This
+  gives UIKit consumers the same shape-level styling ceiling as `PinEntryView`
+  itself — any layout, any `CALayer`, any animation — without requiring any
+  SwiftUI knowledge, at comparable code cost (~40–60 lines) to just keeping
+  the old flat colour/corner-radius/border/font properties, which by contrast
+  could only ever recolour one fixed box shape. Only settable
+  programmatically — a metatype can't be configured from Interface Builder,
+  consistent with storyboard-placed instances always getting the default look.
 - **State-driven, not imperative:** `PinEntryView` is a `struct View` re-created
   from the parent's state on every render — there is no persistent instance to
   call methods on, so every legacy imperative member is replaced by state the
@@ -114,18 +130,23 @@ Reference: `CBPinEntryView/Classes/CBPinEntryView.swift` +
 
 - Configurable `length` (default 4) and `spacing` (10).
 - Two visual styles: boxed (full border) and underlined. The *capability* is
-  preserved — either look (or any other) is achievable as a cell content
-  closure — but neither is a boolean mode baked into `PinEntryView`; see the
-  Design section. The legacy `isUnderlined: Bool` property itself is preserved
-  only on the UIKit shim, for backwards compatibility.
+  preserved on both the new view (a cell content closure) and the legacy shim
+  (a `PinEntryCellRepresentable` custom cell type, see Decisions) — but
+  neither is a special-cased boolean mode on either. The legacy
+  `isUnderlined: Bool` property itself is **not** carried over to the shim; a
+  consumer who needs that exact look implements a small
+  `PinEntryCellRepresentable` reproducing it, exactly as a SwiftUI consumer
+  would write a closure for it.
 - Per-state styling with these defaults: normal background white, text
   `darkText`, corner radius 3, border width 1, default border `.clear`, editing
   border `rgb(69,78,86)`, editing background `rgb(135,154,168)`, filled
   background (`filledEntryColour`, default `.clear`), error border `.red`, font
   system 16. These become `DefaultPinEntryCell`'s own default initialiser
-  values (see Design) — a consumer who wants a few colours tweaked can
-  instantiate it directly inside their own closure with different arguments,
-  without needing to build a look from scratch.
+  values on the new view (see Design). The shim does **not** carry over the
+  individual colour/corner-radius/border/font properties that exposed this on
+  the legacy class — most consumers restyle rather than need pixel-parity with
+  the old palette, and a consumer who does want deep customisation on the shim
+  uses `PinEntryCellRepresentable` instead of a dozen flat properties.
 - Secure entry (`isSecure`) with customisable `secureCharacter` (default `●`).
 - Allowed entry types: `any` / `numerical` / `alphanumeric` / `letters`.
 - Keyboard type (default `.numberPad`); real `UIKeyboardType` on the new view,
@@ -170,6 +191,14 @@ Reference: `CBPinEntryView/Classes/CBPinEntryView.swift` +
   divergent/broken copies and the `Extensions.swift` cruft +
   `IQKeyboardManager` reference.
 - Modernise `CBPinEntryViewDelegate: class` → `AnyObject`.
+- **Simplify the shim's style surface**: drop all ~11 flat legacy
+  colour/corner-radius/border/font properties and `isUnderlined` from the
+  UIKit shim — accepted as a deliberate breaking change for the 2.0 release,
+  since most consumers restyle rather than need the exact legacy palette.
+  Replace them with one general-purpose `PinEntryCellRepresentable`
+  customisation point (see Decisions), giving UIKit consumers genuine
+  shape-level styling power instead of a large flat-property surface capped
+  at recolouring one fixed box.
 
 ## Design
 
@@ -248,30 +277,43 @@ behaviour without bespoke keystroke handling.
 - **`PinEntryHaptics.swift`** — thin wrapper over `UIFeedbackGenerator` for
   entry / completion / error events, gated by the configurable haptics flag.
 
-### Compatibility shim — `Sources/CBPinEntryView/Legacy/CBPinEntryView.swift`
+### Compatibility shim — `Sources/CBPinEntryView/Legacy/`
 
-- `open class CBPinEntryView: UIView` hosting `PinEntryView` via
-  `UIHostingController` (added as a hosted subview). Re-exposes the full legacy
-  API — all former `@IBInspectable` properties, `CBPinEntryViewDelegate` (now
-  `AnyObject`), `allowedEntryTypes`, `textContentType`,
-  `textFieldCapitalization`, `errorMode`, `getPinAsString()/getPinAsInt()`,
-  `setError(_:)`, `clearEntry()`, `become/resignFirstResponder()`, and the
-  legacy raw-`Int` `keyboardType` — even though the new `PinEntryView` itself no
-  longer has these. This is the shim's whole purpose: bridge the old imperative
-  surface onto the new state-driven one.
+- **`CBPinEntryView.swift`** — `open class CBPinEntryView: UIView` hosting
+  `PinEntryView` via `UIHostingController<AnyView>` (added as a hosted
+  subview; the hosted content is type-erased to `AnyView` since the shim
+  itself must stay a concrete, non-generic class to remain usable from
+  storyboards/`@IBDesignable`). Re-exposes the legacy *behavioural* API:
+  `length`, `spacing`, `isSecure`, `secureCharacter`, `keyboardType` (raw
+  `Int`, kept for `@IBInspectable`/storyboard compatibility),
+  `allowedEntryTypes`, `textContentType`, `textFieldCapitalization`,
+  `errorMode`, `getPinAsString()/getPinAsInt()`, `setError(_:)`,
+  `clearEntry()`, `become/resignFirstResponder()`, and
+  `CBPinEntryViewDelegate` (now `AnyObject`). Does **not** re-expose the
+  legacy per-state colour/corner-radius/border/font properties or
+  `isUnderlined` — see Decisions/Improvements.
+- **`PinEntryCellRepresentable.swift`** — the shim's own customisation point:
+  `protocol PinEntryCellRepresentable: UIView { init(); func update(with state: PinEntryCellState) }`,
+  plus a small private `UIViewRepresentable` wrapper that creates the cell
+  once and calls `update(with:)` on each state change (not recreated per
+  keystroke). The shim exposes a settable
+  `cellType: (any PinEntryCellRepresentable.Type)?`; `nil` (the default) uses
+  `PinEntryView`'s own built-in default cell. Only settable
+  programmatically — a metatype can't be configured from Interface Builder,
+  consistent with storyboard-placed instances always getting the default look.
 - Internally holds its own `@State` pin string, `@State` error flag, and
-  `@FocusState`, wired to the hosted `PinEntryView`'s bindings. Maps legacy
-  `UIColor`/`UIFont` properties into `DefaultPinEntryCell`'s initialiser, maps
-  the legacy raw `Int` `keyboardType` into the real `UIKeyboardType`, and
-  forwards binding changes to the delegate to reproduce
-  `entryChanged`/`entryCompleted`. For `isUnderlined = true` the shim supplies
-  its own small cell closure private to `Legacy/` (not part of the public
-  library API) that reproduces the old underlined look — since the public
-  library no longer ships an underlined look, this bit of legacy-only
-  rendering code lives solely here, scoped to backwards compatibility.
-- Keeps `@IBInspectable` so storyboard property-setting works at runtime.
-  Note: `@IBDesignable` *live* Interface Builder rendering is not preserved
-  (SwiftUI hosted content) — the one accepted, documented regression.
+  `@FocusState`, wired to the hosted `PinEntryView`'s bindings; maps the
+  legacy raw `Int` `keyboardType` into the real `UIKeyboardType`; forwards
+  binding changes to the delegate to reproduce
+  `entryChanged`/`entryCompleted`.
+- Keeps `@IBInspectable` on `length`, `spacing`, `isSecure`, `secureCharacter`,
+  and `keyboardType` — all natively IB-safe types (`Int`, `CGFloat`, `Bool`,
+  `String`) — so storyboard placement and property-setting still work for
+  those, at the default look. `allowedEntryTypes`, `textContentType`, and
+  `textFieldCapitalization` remain code-only configuration, matching the
+  original (they were never `@IBInspectable`). Note: `@IBDesignable` *live*
+  Interface Builder rendering is not preserved (SwiftUI hosted content) — the
+  one accepted, documented regression.
 
 ### Tests — `Tests/CBPinEntryViewTests/`
 
@@ -300,7 +342,10 @@ exercises every feature: length, secure toggle, error toggle (via its own
 closure recipe rendering an underlined look — demonstrating both the
 extensibility point and that the removed underlined preset is trivially
 reproducible by a consumer, reused across more than one call site by
-referencing the same function.
+referencing the same function. Also includes a small UIKit-hosted screen
+exercising the legacy `CBPinEntryView` shim directly, including a custom
+`PinEntryCellRepresentable` cell type, to prove the shim's own customisation
+escape hatch works end-to-end and not just compiles.
 
 ### Repo cleanup / packaging
 
@@ -313,8 +358,12 @@ referencing the same function.
   view controller).
 - Add `.github/workflows/ci.yml`: build + `xcodebuild test` on an iOS 17
   simulator, replacing Travis.
-- Update `README.md`: SPM-only install, SwiftUI usage as the primary path plus
-  a legacy UIKit section; refresh badges/metadata.
+- Rewrite `README.md` to be concise, informative, and correct for the rewrite
+  — no leftover CocoaPods/storyboard-first instructions or stale examples.
+  SPM-only install, `PinEntryView` usage as the primary documented path
+  (init, `pin`/`isError` bindings, `cell` closure customisation example),
+  a short legacy `CBPinEntryView` section (including `cellType`), and
+  refreshed badges/metadata.
 - Add `CLAUDE.md` at the repo root.
 
 ### CLAUDE.md contents
@@ -324,14 +373,19 @@ architecture (SwiftUI-first + UIKit shim, zero dependencies, iOS 17, pfw
 patterns applied, state-driven not imperative); file map; public API — SwiftUI
 `PinEntryView` (`pin`/`isError` bindings, focus binding, `onComplete`, the
 `cell` content closure), `PinEntryCellState`, `DefaultPinEntryCell`, the
-haptics flag, and the legacy `CBPinEntryView`; note that colours track
-light/dark automatically (pass asset/semantic `Color`s); how to build & test
-(`swift test` / xcodebuild); how to run the SwiftUI example; conventions (no
-external dependencies, iOS defaults; how to add a new config option in the
+haptics flag, and the legacy `CBPinEntryView` (including its own
+`PinEntryCellRepresentable`/`cellType` customisation point); note that colours
+track light/dark automatically (pass asset/semantic `Color`s); how to build &
+test (`swift test` / xcodebuild); how to run the SwiftUI example; conventions
+(no external dependencies, iOS defaults; how to add a new config option in the
 reducer, the SwiftUI view, the default cell, and the shim; how a consumer
 writes a custom cell closure with their own animation, e.g. reproducing an
 underlined look, and how to reuse one closure across multiple `PinEntryView`
-call sites by extracting it to a plain function).
+call sites by extracting it to a plain function; the two parallel, audience-
+appropriate customisation mechanisms — a `View`-returning closure for SwiftUI
+consumers of `PinEntryView`, a `UIView`-returning `PinEntryCellRepresentable`
+for UIKit consumers of the shim — and why the shim doesn't just reuse the
+SwiftUI closure).
 
 ## Verification
 
@@ -351,5 +405,12 @@ call sites by extracting it to a plain function).
   `pin = ""` alone re-renders correctly with no separate reset call.
 - Sanity-check the shim compiles against the old call sites (the former
   `ViewController` usage: outlet + delegate + `getPinAsString`/`setError`/
-  `clearEntry`/`resignFirstResponder`) and that `isUnderlined` still renders the
-  legacy underlined look via the shim's private cell closure.
+  `clearEntry`/`resignFirstResponder`) minus the removed styling properties
+  and `isUnderlined`, which are an accepted 2.0 breaking change.
+- Confirm the shim's `cellType` escape hatch: a custom
+  `PinEntryCellRepresentable` in the example's UIKit screen renders correctly
+  and reflects focus/fill/error state changes via `update(with:)` without
+  being recreated on every keystroke; confirm `cellType == nil` still renders
+  `PinEntryView`'s own default cell.
+- Read the rewritten `README.md` end-to-end and confirm every code sample in
+  it actually compiles against the final API.
