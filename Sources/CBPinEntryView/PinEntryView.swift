@@ -23,6 +23,8 @@ public struct PinEntryView<CellContent: View>: View {
     @ScaledMetric(relativeTo: .title2) private var minimumCellWidth: CGFloat = 44
     @State private var haptics = PinEntryHaptics()
     @State private var previousPin: String = ""
+    @State private var rawText: String = ""
+    @State private var isSyncingFromPin = false
 
     public init(
         pin: Binding<String>,
@@ -64,7 +66,29 @@ public struct PinEntryView<CellContent: View>: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { effectiveFocusBinding.wrappedValue = true }
-        .onAppear { previousPin = pin.wrappedValue }
+        .onAppear {
+            previousPin = pin.wrappedValue
+            if pin.wrappedValue != rawText {
+                isSyncingFromPin = true
+            }
+            rawText = pin.wrappedValue
+        }
+        .onChange(of: rawText) { newValue in
+            // A pin-originated resync renders programmatic values as-is; only
+            // user edits flow through the reducer (see CLAUDE.md — programmatic
+            // assignment is never sanitised or stripped).
+            if isSyncingFromPin {
+                isSyncingFromPin = false
+                return
+            }
+            let reduced = PinEntryReducer.reduce(newValue, length: length, allowedEntry: allowedEntry)
+            if reduced != rawText {
+                rawText = reduced
+            }
+            if reduced != pin.wrappedValue {
+                pin.wrappedValue = reduced
+            }
+        }
         .onChange(of: pin.wrappedValue) { newValue in
             let completed = PinEntryReducer.didComplete(from: previousPin, to: newValue, length: length)
             if completed {
@@ -74,6 +98,10 @@ public struct PinEntryView<CellContent: View>: View {
                 haptics.fireEntry(enabled: hapticEvents)
             }
             previousPin = newValue
+            if newValue != rawText {
+                isSyncingFromPin = true
+                rawText = newValue
+            }
         }
         .onChange(of: isError) { newValue in
             if newValue {
@@ -117,9 +145,9 @@ public struct PinEntryView<CellContent: View>: View {
     private var inputField: some View {
         Group {
             if isSecure {
-                SecureField("", text: pin.sanitising(length: length, allowedEntry: allowedEntry))
+                SecureField("", text: $rawText)
             } else {
-                TextField("", text: pin.sanitising(length: length, allowedEntry: allowedEntry))
+                TextField("", text: $rawText)
             }
         }
         .keyboardType(keyboardType)
@@ -225,14 +253,5 @@ extension PinEntryView {
         var copy = self
         copy.externalFocus = binding
         return copy
-    }
-}
-
-private extension Binding where Value == String {
-    func sanitising(length: Int, allowedEntry: AllowedEntryType) -> Binding<String> {
-        Binding(
-            get: { wrappedValue },
-            set: { wrappedValue = PinEntryReducer.reduce($0, length: length, allowedEntry: allowedEntry) }
-        )
     }
 }
