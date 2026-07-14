@@ -1,70 +1,108 @@
 # CBPinEntryView
 
-[![Version](https://img.shields.io/cocoapods/v/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
-[![License](https://img.shields.io/cocoapods/l/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
-[![Platform](https://img.shields.io/cocoapods/p/CBPinEntryView.svg?style=flat)](http://cocoapods.org/pods/CBPinEntryView)
+A SwiftUI view for entering pins, one-time codes, or passwords — backspace, paste, and `.oneTimeCode` autofill all work correctly out of the box, with first-class accessibility (VoiceOver progress announcements, Dynamic Type, no colour-only states).
 
-CBPinEntryView is a view written in Swift to allow easy and slick entry of pins, codes or passwords. It allows backspacing, dismissal of keyboard and continuing where you left off, the whole code is given as a single String or Int and the view is very easily customisable in code or the storyboard.
+## Requirements
 
-## Preview
-
-
-
-| Enter pins easily! | Communicate user error | Clear the text field to retry | Secure entry mode |
-|:------------------:|:----------------------:|:-----------------------------:|:-----------------:|
-| ![](http://i.imgur.com/75oYhG5.gif) | ![](http://i.imgur.com/UU5Xm7X.gif) | ![](http://i.imgur.com/ABZH0Ea.gif) | ![](http://i.imgur.com/zAhXL7O.gif) |
-
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+- iOS 16.0+
+- Swift 5.9+
+- No external dependencies
 
 ## Installation
 
-CBPinEntryView is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+Swift Package Manager only:
 
-```ruby
-pod "CBPinEntryView"
+```swift
+dependencies: [
+    .package(url: "https://github.com/Fawxy/CBPinEntryView.git", from: "2.0.0")
+]
 ```
-Put a view into your storyboard or xib and set it's class to `CBPinEntryView`. Create an outlet in your file and customise either with the IBInspectable properties or in your code.
 
-### Get the code
+> Upgrading from 1.x? CBPinEntryView 2.0 is a SwiftUI-only rewrite with no UIKit compatibility shim. See [MIGRATION.md](MIGRATION.md).
 
-Get the code with either `entryView.getPinAsString()` or `entryView.getPinAsInt()`.
+## Usage
 
-### Entry callbacks
+```swift
+import CBPinEntryView
 
-There are two delegate methods `entryChanged(_ completed: Bool)` and `entryCompleted(with entry: String?)`. The first will let you know each time the entry is changed, and whether they have completed the entry. The second function will get called when the user fills out the entry to completion and the entered pin will be passed.
+struct LoginView: View {
+    @State private var pin = ""
+    @State private var isError = false
 
-### Secure entry
-
-Secure entry with customisable secure character (change from ● to ✱ or any other character). Enable `isSecure`.
-Change the secure entry character by setting the `secureCharacter` property.
-
-### Display errors
-
-There is an error mode which can be enabled with `pinEntryView.setError(isError: true)` and disabled with `pinEntryView.setError(isError: false)`. Whether error mode is enabled can be checked with `pinEntryView.errorMode`. Calling `pinEntryView.resignFirstResponder()` will hide the keyboard and disable the error mode.
-
-### Allow or restrict characters
-
-Set `allowedEntryTypes` and choose between `any`, `numerical`, `alphanumeric`, `letters` to enable or restrict characters. Set `textFieldCapitalization` to choose what kind of capitalisation you would like on the text field.
-
-### Customise keyboard type!
-
-The keyboard types are an enum with int raw values. Options are as follows:
-
+    var body: some View {
+        PinEntryView(pin: $pin, length: 6, isError: $isError) { pin in
+            print("Completed: \(pin)")
+        }
+    }
+}
 ```
-0: default // Default type for the current input method.
-1: asciiCapable // Displays a keyboard which can enter ASCII characters
-2: numbersAndPunctuation // Numbers and assorted punctuation.
-3: URL // A type optimized for URL entry (shows . / .com prominently).
-4: numberPad // A number pad with locale-appropriate digits (0-9, ۰-۹, ०-९, etc.). Suitable for PIN entry.
-5: phonePad // A phone pad (1-9, *, 0, #, with letters under the numbers).
-6: namePhonePad // A type optimized for entering a person's name or phone number.
-7: emailAddress // A type optimized for multiple email address entry (shows space @ . prominently).
-8: decimalPad // A number pad with a decimal point.
-9: twitter // A type optimized for twitter text entry (easy access to @ #)
+
+`pin` is the single source of truth — read it directly, no `getPinAsString()` needed. Set `pin = ""` to clear.
+
+### Configuration
+
+Behavioural configuration is applied via `pin`-prefixed modifiers, not the standard SwiftUI ones (see "Why `pin`-prefixed modifiers?" below):
+
+```swift
+PinEntryView(pin: $pin, length: 4, isError: $isError)
+    .pinAllowedEntry(.numerical)
+    .pinSecure(true, character: "●")
+    .pinKeyboardType(.numberPad)
+    .pinTextContentType(.oneTimeCode)
+    .pinTextInputAutocapitalization(.never)
+    .pinHaptics(.default)
+    .pinFocused($isFocused)
 ```
+
+### Custom cell rendering
+
+The library ships one default cell (`DefaultPinEntryCell`) but imposes no particular look. Pass your own `@ViewBuilder` closure over `PinEntryCellState`:
+
+```swift
+PinEntryView(pin: $pin, length: 4, isError: $isError) { state in
+    VStack {
+        Text(state.character ?? "")
+        Rectangle()
+            .fill(state.isFocused ? Color.accentColor : Color.secondary)
+            .frame(height: state.isFocused ? 3 : 1)
+    }
+}
+```
+
+`PinEntryCellState` is already masked when secure — a custom cell never sees the raw digit in secure mode.
+
+### Why `pin`-prefixed modifiers?
+
+A wrapper view can't give a propagating standard modifier (`.keyboardType`, `.textContentType`, `.textInputAutocapitalization`) an overridable default: SwiftUI's environment resolves closest-to-the-field-wins, and the field inside `PinEntryView` is always closer than anything wrapped around it. Applying the standard modifier outside `PinEntryView` would silently do nothing. The `pin`-prefixed modifiers avoid that footgun — apply them directly on `PinEntryView`, before any type-erasing modifier like `.frame()`.
+
+### Accessibility
+
+The field carries a single accessibility element (label + a live "N of M entered" progress value); the cell overlay is hidden from VoiceOver. Secure entry reports count only, never characters. Error is surfaced non-visually as well as visually. This is guaranteed by the library regardless of the `cell` closure you provide.
+
+### UIKit interop
+
+`PinEntryView` is a SwiftUI-only view. Host it from UIKit with `UIHostingController`:
+
+```swift
+let pinView = PinEntryView(pin: pinBinding, length: 4, isError: errorBinding) { pin in
+    // handle completion
+}
+let hosting = UIHostingController(rootView: pinView)
+addChild(hosting)
+view.addSubview(hosting.view)
+// ... Auto Layout constraints ...
+hosting.didMove(toParent: self)
+```
+
+See `Example/Example/HostingControllerInteropScreen.swift` for a complete, running example.
+
+## Example app
+
+Open `Example/Example.xcodeproj` in Xcode and run the `Example` scheme (iOS 17+ simulator). It exercises length, secure toggle, error toggle, allowed-character restriction, clear, programmatic focus, a custom underlined cell with a shake-on-error animation, an `@Observable` feature-model screen, and the `UIHostingController` interop screen.
+
+## Migrating from 1.x
+
+See [MIGRATION.md](MIGRATION.md) for the full API mapping.
 
 ## License
 
