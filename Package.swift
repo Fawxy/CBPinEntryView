@@ -1,14 +1,14 @@
-// swift-tools-version:5.3
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version: 5.9
 import PackageDescription
 
 let package = Package(
     name: "CBPinEntryView",
+    platforms: [.iOS(.v16)],
     products: [
-        .library(name: "CBPinEntryView", targets: ["CBPinEntryView"]),
+        .library(name: "CBPinEntryView", targets: ["CBPinEntryView"])
     ],
     targets: [
-        .target(name: "CBPinEntryView")
+        .target(name: "CBPinEntryView"),
+        .testTarget(name: "CBPinEntryViewTests", dependencies: ["CBPinEntryView"])
     ]
 )
