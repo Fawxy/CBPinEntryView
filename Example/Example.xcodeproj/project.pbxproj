@@ -11,6 +11,7 @@
 		564360969A7922B511992B0B /* CBPinEntryView in Frameworks */ = {isa = PBXBuildFile; productRef = 800D0E16AA1E8D144C4C7EE3 /* CBPinEntryView */; };
 		7B61EE3CAEE935B4C4A266EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9721B7DAA618B1D77C3108A9 /* Assets.xcassets */; };
 		AE0933B61A77A1FFC73CF35D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC35412AB1481442DB5704 /* ContentView.swift */; };
+		B127D86E2A7E860A6273A571 /* UnderlinedPinCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED93EDE3C5E12792E2AF91DE /* UnderlinedPinCell.swift */; };
 		B8921C89E996A962367FAEDF /* HostingControllerInteropScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */; };
 		CEF6ED542EAE9D42A054F589 /* ObservablePinScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445F522E46FAD2533CCDB38 /* ObservablePinScreen.swift */; };
 		E55B123DE49F19DD3A312A2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D07E4B649392B60C052CF29D /* Foundation.framework */; };
@@ -24,6 +25,7 @@
 		9721B7DAA618B1D77C3108A9 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D07E4B649392B60C052CF29D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		D5A6971DF8EF2C6C58B11B48 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED93EDE3C5E12792E2AF91DE /* UnderlinedPinCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UnderlinedPinCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				9721B7DAA618B1D77C3108A9 /* Assets.xcassets */,
 				8445F522E46FAD2533CCDB38 /* ObservablePinScreen.swift */,
 				301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */,
+				ED93EDE3C5E12792E2AF91DE /* UnderlinedPinCell.swift */,
 			);
 			name = Example;
 			path = Example;
@@ -160,6 +163,7 @@
 				AE0933B61A77A1FFC73CF35D /* ContentView.swift in Sources */,
 				CEF6ED542EAE9D42A054F589 /* ObservablePinScreen.swift in Sources */,
 				B8921C89E996A962367FAEDF /* HostingControllerInteropScreen.swift in Sources */,
+				B127D86E2A7E860A6273A571 /* UnderlinedPinCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
