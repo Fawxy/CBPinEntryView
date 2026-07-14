@@ -45,11 +45,10 @@ struct PinEntryReducerTests {
         #expect(PinEntryReducer.didComplete(from: "12", to: "999999", length: 4))
     }
 
-    @Test("maskedDisplay yields one mask character per entered digit, raw pin unaffected")
+    @Test("maskedDisplay yields one mask character per entered digit")
     func maskedDisplayYieldsMaskPerCharacter() {
         let pin = "1234"
         let masked = PinEntryReducer.maskedDisplay(pin, secureCharacter: "●")
         #expect(masked == "●●●●")
-        #expect(pin == "1234")
     }
 }
