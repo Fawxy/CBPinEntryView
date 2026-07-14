@@ -10,9 +10,14 @@ struct HostingControllerInteropScreen: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: PinHostingViewController, context: Context) {}
 }
 
+@Observable
+final class PinHostingModel {
+    var pin = ""
+    var isError = false
+}
+
 final class PinHostingViewController: UIViewController {
-    private var pin = ""
-    private var isError = false
+    private let model = PinHostingModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,12 +25,12 @@ final class PinHostingViewController: UIViewController {
         view.backgroundColor = .systemBackground
 
         let pinBinding = Binding(
-            get: { [weak self] in self?.pin ?? "" },
-            set: { [weak self] in self?.pin = $0 }
+            get: { [model] in model.pin },
+            set: { [model] in model.pin = $0 }
         )
         let errorBinding = Binding(
-            get: { [weak self] in self?.isError ?? false },
-            set: { [weak self] in self?.isError = $0 }
+            get: { [model] in model.isError },
+            set: { [model] in model.isError = $0 }
         )
 
         let pinView = PinEntryView(pin: pinBinding, length: 4, isError: errorBinding) { pin in
