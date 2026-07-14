@@ -55,14 +55,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		824FE21FDEBB02E2AEBCB706 /* Example */ = {
-			isa = PBXGroup;
-			children = (
-				301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */,
-			);
-			name = Example;
-			sourceTree = "<group>";
-		};
 		9ED9018E43496FD9F883E29C /* Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -70,7 +62,7 @@
 				04BC35412AB1481442DB5704 /* ContentView.swift */,
 				9721B7DAA618B1D77C3108A9 /* Assets.xcassets */,
 				8445F522E46FAD2533CCDB38 /* ObservablePinScreen.swift */,
-				824FE21FDEBB02E2AEBCB706 /* Example */,
+				301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */,
 			);
 			name = Example;
 			path = Example;
