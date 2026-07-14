@@ -11,12 +11,14 @@
 		564360969A7922B511992B0B /* CBPinEntryView in Frameworks */ = {isa = PBXBuildFile; productRef = 800D0E16AA1E8D144C4C7EE3 /* CBPinEntryView */; };
 		7B61EE3CAEE935B4C4A266EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9721B7DAA618B1D77C3108A9 /* Assets.xcassets */; };
 		AE0933B61A77A1FFC73CF35D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC35412AB1481442DB5704 /* ContentView.swift */; };
+		B8921C89E996A962367FAEDF /* HostingControllerInteropScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */; };
 		CEF6ED542EAE9D42A054F589 /* ObservablePinScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445F522E46FAD2533CCDB38 /* ObservablePinScreen.swift */; };
 		E55B123DE49F19DD3A312A2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D07E4B649392B60C052CF29D /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04BC35412AB1481442DB5704 /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HostingControllerInteropScreen.swift; sourceTree = "<group>"; };
 		8445F522E46FAD2533CCDB38 /* ObservablePinScreen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ObservablePinScreen.swift; sourceTree = "<group>"; };
 		8B749797C6FE93FAEF380B8E /* ExampleApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = "<group>"; };
 		9721B7DAA618B1D77C3108A9 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -53,6 +55,14 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		824FE21FDEBB02E2AEBCB706 /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				301C5CE3F9E4571DFA52B89F /* HostingControllerInteropScreen.swift */,
+			);
+			name = Example;
+			sourceTree = "<group>";
+		};
 		9ED9018E43496FD9F883E29C /* Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +70,7 @@
 				04BC35412AB1481442DB5704 /* ContentView.swift */,
 				9721B7DAA618B1D77C3108A9 /* Assets.xcassets */,
 				8445F522E46FAD2533CCDB38 /* ObservablePinScreen.swift */,
+				824FE21FDEBB02E2AEBCB706 /* Example */,
 			);
 			name = Example;
 			path = Example;
@@ -156,6 +167,7 @@
 				280D41009A4AA2F027F700F6 /* ExampleApp.swift in Sources */,
 				AE0933B61A77A1FFC73CF35D /* ContentView.swift in Sources */,
 				CEF6ED542EAE9D42A054F589 /* ObservablePinScreen.swift in Sources */,
+				B8921C89E996A962367FAEDF /* HostingControllerInteropScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
