@@ -19,7 +19,7 @@ jobs:
       # this image is iOS 17.0, bundled with the oldest side-installed
       # Xcode (15.0.1). We pin to that combination as the closest available
       # proxy for validating the package's iOS 16 minimum deployment
-      # target. `swift build` still compiles against the iOS 16 minimum
+      # target. `xcodebuild test` still compiles against the iOS 16 minimum
       # deployment target declared in Package.swift; only the *runtime*
       # used to execute tests is newer. Re-check the runner-images README
       # if genuine iOS 16.x runtime testing becomes available again.
