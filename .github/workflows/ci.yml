@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  library:
+    name: Build & test library (min iOS 16 deployment target)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      # As of the current macos-14 runner image (see
+      # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-Readme.md),
+      # none of the installed Xcode versions (15.0.1-16.2) bundle an iOS
+      # 16.x simulator runtime any more; the oldest runtime available on
+      # this image is iOS 17.0, bundled with the oldest side-installed
+      # Xcode (15.0.1). We pin to that combination as the closest available
+      # proxy for validating the package's iOS 16 minimum deployment
+      # target. `swift build` still compiles against the iOS 16 minimum
+      # deployment target declared in Package.swift; only the *runtime*
+      # used to execute tests is newer. Re-check the runner-images README
+      # if genuine iOS 16.x runtime testing becomes available again.
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.0.1.app
+      - name: Build
+        run: swift build
+      - name: Test
+        run: |
+          xcodebuild test \
+            -scheme CBPinEntryView \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.0'
+
+  example:
+    name: Build example app (iOS 17)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      # Default Xcode on the current macos-14 image; bundles iOS 17.5,
+      # the newest iOS 17.x runtime available on this image (confirmed
+      # against the runner-images README as of this writing).
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+      - name: Build example
+        run: |
+          xcodebuild build \
+            -project Example/Example.xcodeproj \
+            -scheme Example \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.5'
