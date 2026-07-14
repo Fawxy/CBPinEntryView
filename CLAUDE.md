@@ -63,12 +63,7 @@ A wrapper view can't give a propagating standard text modifier (`.keyboardType`,
 
 ## Build & test
 
-```sh
-swift build
-swift test
-```
-
-Or against a specific simulator:
+The library imports UIKit, so plain `swift build`/`swift test` fail on macOS with "no such module 'UIKit'" — always build/test against an iOS Simulator:
 
 ```sh
 xcodebuild test -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=<device>'

@@ -25,8 +25,6 @@ jobs:
       # if genuine iOS 16.x runtime testing becomes available again.
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_15.0.1.app
-      - name: Build
-        run: swift build
       - name: Test
         run: |
           xcodebuild test \
