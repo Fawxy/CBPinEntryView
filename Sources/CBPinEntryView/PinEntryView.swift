@@ -23,7 +23,6 @@ public struct PinEntryView<CellContent: View>: View {
     @FocusState private var internalFocus: Bool
     @ScaledMetric(relativeTo: .title2) private var minimumCellWidth: CGFloat = 44
     @State private var haptics = PinEntryHaptics()
-    @State private var isPasteConfirmationPresented = false
 
     // Reconciliation state for the invisible field. `rawText` mirrors the field's
     // own text; `pin` is the public source of truth. `previousPin` tracks whether
@@ -73,7 +72,11 @@ public struct PinEntryView<CellContent: View>: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { effectiveFocusBinding.wrappedValue = true }
-        .onLongPressGesture { attemptPaste() }
+        .contextMenu {
+            if isPasteEnabled, UIPasteboard.general.hasStrings {
+                Button("Paste") { performPaste() }
+            }
+        }
         .onAppear {
             previousPin = pin.wrappedValue
             if pin.wrappedValue != rawText {
@@ -90,9 +93,6 @@ public struct PinEntryView<CellContent: View>: View {
         }
         .task {
             haptics.prepare(for: hapticEvents)
-        }
-        .confirmationDialog("", isPresented: $isPasteConfirmationPresented, titleVisibility: .hidden) {
-            Button("Paste") { performPaste() }
         }
     }
 
@@ -125,11 +125,6 @@ public struct PinEntryView<CellContent: View>: View {
             isSyncingFromPin = true
             rawText = newValue
         }
-    }
-
-    private func attemptPaste() {
-        guard isPasteEnabled, UIPasteboard.general.hasStrings else { return }
-        isPasteConfirmationPresented = true
     }
 
     private func performPaste() {
@@ -168,14 +163,6 @@ public struct PinEntryView<CellContent: View>: View {
 
     @ViewBuilder
     private var inputField: some View {
-        if isPasteEnabled {
-            baseInputField.accessibilityAction(named: Text("Paste")) { attemptPaste() }
-        } else {
-            baseInputField
-        }
-    }
-
-    private var baseInputField: some View {
         Group {
             if isSecure {
                 SecureField("", text: $rawText)
