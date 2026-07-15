@@ -1,5 +1,13 @@
 # Paste via long-press on pin cells
 
+> **Revision (post-implementation):** the original design (below) used
+> `.onLongPressGesture` + `.confirmationDialog`, which was implemented and
+> reviewed. It was then revised to use `.contextMenu` instead — see
+> "Revised trigger: `.contextMenu`" under Design. The rest of this doc
+> (Purpose, the rejected `PasteButton`/`UIEditMenuInteraction` options,
+> append-to-`rawText` semantics, `pinPasteEnabled` configuration) is
+> unchanged and still accurate.
+
 ## Purpose
 
 `PinEntryView` is documented as supporting paste, but there is currently no
@@ -38,7 +46,7 @@ was prioritized over avoiding the OS prompt.
 
 ## Design
 
-### Trigger and confirmation
+### Trigger and confirmation (superseded — see revision below)
 
 - Add `.onLongPressGesture { attemptPaste() }` alongside the existing
   `.onTapGesture` on the `ZStack`'s content shape.
@@ -68,6 +76,47 @@ was prioritized over avoiding the OS prompt.
   paste is truncated away entirely — identical to typing extra characters
   once full.
 
+### Revised trigger: `.contextMenu`
+
+`.confirmationDialog` renders as a bottom action sheet (or iPad popover)
+with full-width button rows — visually a poor match for "a plain paste
+action near the touch point." SwiftUI's `.contextMenu` is the closer fit:
+it's natively long-press-triggered (no separate `.onLongPressGesture`
+needed) and presents a small floating list of plain text/icon actions at
+the touch point, much closer to the native Edit Menu look than an action
+sheet. It does **not** change the OS prompt trade-off — a custom
+`.contextMenu` button reading `UIPasteboard.general.string` is still
+outside the three exempted paths (Edit Menu, `⌘V`, `UIPasteControl`/
+`PasteButton`), so "Allow Paste from X?" still appears every time.
+
+Replaces the previous "Trigger and confirmation" section's mechanism:
+
+- Remove `.onLongPressGesture { attemptPaste() }`, `.confirmationDialog`,
+  `@State private var isPasteConfirmationPresented`, and `attemptPaste()`
+  entirely — `.contextMenu`'s own gesture recognition and presentation
+  replace all of it.
+- Add, alongside the existing `.onTapGesture` on the `ZStack`'s content
+  shape:
+
+  ```swift
+  .contextMenu {
+      if isPasteEnabled, UIPasteboard.general.hasStrings {
+          Button("Paste") { performPaste() }
+      }
+  }
+  ```
+
+- The `if` inside the menu builder is evaluated live at long-press time, so
+  it reflects the pasteboard's current contents and the current
+  `isPasteEnabled` value — no separate presentation-state variable needed.
+- `performPaste()` is unchanged: reads `UIPasteboard.general.string`,
+  appends to `rawText`, focuses the field.
+- **Needs on-device verification:** when the `if` produces zero menu items
+  (paste disabled or nothing pasteable), does long-pressing show no menu at
+  all, or an empty floating box? Expected behavior (per SwiftUI's general
+  handling of empty menu builders) is no menu, but this hasn't been
+  confirmed on a simulator/device for this exact call site.
+
 ### Configuration
 
 - New stored property `private var isPasteEnabled: Bool = true` and a
@@ -79,28 +128,38 @@ was prioritized over avoiding the OS prompt.
 
 - Defaults to enabled (opt-out), since the whole point of this feature is
   fixing a gap in already-shipped "paste support" — existing consumers get
-  the fix with no code changes. `isPasteEnabled` gates both the long-press
-  gesture and the accessibility action below.
+  the fix with no code changes. `isPasteEnabled` gates the `.contextMenu`'s
+  content (see Revised trigger above).
 
-### Accessibility
+### Accessibility (revised)
 
-- Expose the same `attemptPaste()` behavior as a custom
-  `.accessibilityAction(named: Text("Paste")) { attemptPaste() }` on the
-  existing invisible field (the library's one accessible element).
-- Because this reuses the field's existing accessibility element rather
-  than introducing a separate visible control, **no change to the
-  "exactly one element" invariant in CLAUDE.md is needed.** VoiceOver users
-  reach paste through the field's actions rotor, activate it, and hit the
-  same confirmation-dialog/OS-prompt flow as a sighted long-press.
+- Originally: a custom `.accessibilityAction(named: Text("Paste")) {
+  attemptPaste() }` on the existing invisible field, to avoid introducing a
+  second accessible element.
+- **Revised:** `.contextMenu` buttons are standard SwiftUI `Button`s, and
+  SwiftUI automatically surfaces a view's `.contextMenu` actions to
+  VoiceOver as custom actions on that view's existing accessibility element
+  (the same rotor mechanism `.accessibilityAction` uses) — without a
+  separate physical long-press from the VoiceOver user. This means the
+  manual `.accessibilityAction` is redundant once `.contextMenu` is in
+  place, and has been removed.
+- This still satisfies the "exactly one accessible element" invariant in
+  CLAUDE.md — no new element is introduced either way.
+- **Needs on-device verification:** confirm VoiceOver actually exposes a
+  "Paste" custom action from the `.contextMenu` alone (no double entry, no
+  missing entry). If it doesn't, reinstate the manual
+  `.accessibilityAction` as a fallback.
 
 ### Implementation risk to verify
 
-- `.onLongPressGesture` and `.onTapGesture` attached to the same view can
-  sometimes need explicit composition (e.g. `.simultaneously(with:)`) to
-  both fire correctly rather than one suppressing the other. This needs
-  on-device verification during implementation; if the default composition
-  doesn't work cleanly, the tap-to-focus and long-press-to-paste gestures
-  may need to be combined explicitly.
+- `.contextMenu`'s built-in long-press recognition and the existing
+  `.onTapGesture` on the same view: does tap-to-focus still work
+  cleanly alongside `.contextMenu`'s gesture? `.contextMenu` uses a native,
+  widely-used interaction (`UIContextMenuInteraction` under the hood) rather
+  than a hand-rolled gesture, so this is expected to be more robust than the
+  original `.onLongPressGesture` composition — but still needs on-device
+  confirmation, not just assumed.
+- The empty-menu-builder behavior noted under "Revised trigger" above.
 
 ## Out of scope
 
@@ -108,7 +167,7 @@ was prioritized over avoiding the OS prompt.
 - Avoiding the OS "Allow Paste" confirmation prompt.
 - Pasting non-string content (images, URLs as distinct types, etc.) —
   `UIPasteboard.general.string` only.
-- A "Clear" or other action alongside "Paste" in the confirmation dialog.
+- A "Clear" or other action alongside "Paste" in the context menu.
 - Any Example app changes — this is default-on library behavior, already
   exercised by every existing pin field in the Example app.
 - Automated tests — this is gesture/UIKit-pasteboard-driven view behavior,
