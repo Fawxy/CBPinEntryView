@@ -22,6 +22,11 @@ public struct PinEntryView<CellContent: View>: View {
     @FocusState private var internalFocus: Bool
     @ScaledMetric(relativeTo: .title2) private var minimumCellWidth: CGFloat = 44
     @State private var haptics = PinEntryHaptics()
+
+    // Reconciliation state for the invisible field. `rawText` mirrors the field's
+    // own text; `pin` is the public source of truth. `previousPin` tracks whether
+    // the last change crossed the completion threshold, and `isSyncingFromPin`
+    // suppresses the echo when a programmatic `pin` change is pushed into `rawText`.
     @State private var previousPin: String = ""
     @State private var rawText: String = ""
     @State private var isSyncingFromPin = false
@@ -73,43 +78,46 @@ public struct PinEntryView<CellContent: View>: View {
             }
             rawText = pin.wrappedValue
         }
-        .onChange(of: rawText) { newValue in
-            // A pin-originated resync renders programmatic values as-is; only
-            // user edits flow through the reducer (see CLAUDE.md — programmatic
-            // assignment is never sanitised or stripped).
-            if isSyncingFromPin {
-                isSyncingFromPin = false
-                return
-            }
-            let reduced = PinEntryReducer.reduce(newValue, length: length, allowedEntry: allowedEntry)
-            if reduced != rawText {
-                rawText = reduced
-            }
-            if reduced != pin.wrappedValue {
-                pin.wrappedValue = reduced
-            }
-        }
-        .onChange(of: pin.wrappedValue) { newValue in
-            let completed = PinEntryReducer.didComplete(from: previousPin, to: newValue, length: length)
-            if completed {
-                haptics.fireCompletion(enabled: hapticEvents)
-                onComplete?(newValue)
-            } else {
-                haptics.fireEntry(enabled: hapticEvents)
-            }
-            previousPin = newValue
-            if newValue != rawText {
-                isSyncingFromPin = true
-                rawText = newValue
-            }
-        }
+        .onChange(of: rawText) { userDidEdit(to: $0) }
+        .onChange(of: pin.wrappedValue) { pinDidChangeExternally(to: $0) }
         .onChange(of: isError) { newValue in
             if newValue {
-                haptics.fireError(enabled: hapticEvents)
+                haptics.fireError(for: hapticEvents)
             }
         }
         .task {
             haptics.prepare(for: hapticEvents)
+        }
+    }
+
+    private func userDidEdit(to newValue: String) {
+        // A programmatic `pin` change we pushed into `rawText` echoes back here.
+        // Let it pass through untouched (see CLAUDE.md — programmatic assignment
+        // is never sanitised or stripped); only genuine user edits are reduced.
+        if isSyncingFromPin {
+            isSyncingFromPin = false
+            return
+        }
+        let reduced = PinEntryReducer.reduce(newValue, length: length, allowedEntry: allowedEntry)
+        if reduced != rawText {
+            rawText = reduced
+        }
+        if reduced != pin.wrappedValue {
+            pin.wrappedValue = reduced
+        }
+    }
+
+    private func pinDidChangeExternally(to newValue: String) {
+        if PinEntryReducer.didComplete(from: previousPin, to: newValue, length: length) {
+            haptics.fireCompletion(for: hapticEvents)
+            onComplete?(newValue)
+        } else {
+            haptics.fireEntry(for: hapticEvents)
+        }
+        previousPin = newValue
+        if newValue != rawText {
+            isSyncingFromPin = true
+            rawText = newValue
         }
     }
 

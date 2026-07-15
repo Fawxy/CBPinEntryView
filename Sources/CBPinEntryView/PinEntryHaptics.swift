@@ -25,17 +25,17 @@ struct PinEntryHaptics {
         }
     }
 
-    func fireEntry(enabled events: PinEntryHapticEvents) {
+    func fireEntry(for events: PinEntryHapticEvents) {
         guard events.contains(.entry) else { return }
         selectionGenerator.selectionChanged()
     }
 
-    func fireCompletion(enabled events: PinEntryHapticEvents) {
+    func fireCompletion(for events: PinEntryHapticEvents) {
         guard events.contains(.completion) else { return }
         notificationGenerator.notificationOccurred(.success)
     }
 
-    func fireError(enabled events: PinEntryHapticEvents) {
+    func fireError(for events: PinEntryHapticEvents) {
         guard events.contains(.error) else { return }
         notificationGenerator.notificationOccurred(.error)
     }
