@@ -168,6 +168,14 @@ public struct PinEntryView<CellContent: View>: View {
 
     @ViewBuilder
     private var inputField: some View {
+        if isPasteEnabled {
+            baseInputField.accessibilityAction(named: Text("Paste")) { attemptPaste() }
+        } else {
+            baseInputField
+        }
+    }
+
+    private var baseInputField: some View {
         Group {
             if isSecure {
                 SecureField("", text: $rawText)
