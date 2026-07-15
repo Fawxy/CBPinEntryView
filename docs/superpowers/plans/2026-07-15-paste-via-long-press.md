@@ -91,7 +91,7 @@ Replace it with:
 
 - [ ] **Step 3: Build to verify it compiles**
 
-Run: `xcodebuild build -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`
+Run: `xcodebuild build -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.6'`
 Expected: `** BUILD SUCCEEDED **`. `isPasteEnabled` is unused so far — that's expected; it's consumed starting in Task 2.
 
 - [ ] **Step 4: Commit**
@@ -240,7 +240,7 @@ Replace with:
 
 - [ ] **Step 4: Build to verify it compiles**
 
-Run: `xcodebuild build -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`
+Run: `xcodebuild build -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.6'`
 Expected: `** BUILD SUCCEEDED **`
 
 - [ ] **Step 5: Commit**
@@ -323,7 +323,7 @@ Replace with:
 
 - [ ] **Step 2: Build to verify it compiles**
 
-Run: `xcodebuild build -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`
+Run: `xcodebuild build -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.6'`
 Expected: `** BUILD SUCCEEDED **`
 
 - [ ] **Step 3: Commit**
@@ -345,7 +345,7 @@ git commit -m "Expose paste as a VoiceOver accessibility action"
 
 - [ ] **Step 1: Run the existing automated test suite as a regression check**
 
-Run: `xcodebuild test -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`
+Run: `xcodebuild test -scheme CBPinEntryView -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.6'`
 Expected: all existing `PinEntryReducer`/`AllowedEntryType` tests still pass (this change doesn't touch the reducer, so this should be unaffected).
 
 - [ ] **Step 2: Open the Example app and run it**
