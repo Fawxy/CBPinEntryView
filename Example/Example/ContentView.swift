@@ -9,22 +9,21 @@ struct ContentView: View {
     @State private var allowedEntry: AllowedEntryType = .numerical
     @State private var useUnderlinedCell = false
     @FocusState private var isPinFocused: Bool
+    @State private var shakeTrigger = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Pin entry") {
+                    // The two branches differ only in the cell closure, which changes
+                    // PinEntryView's generic type — so they can't be unified into one
+                    // expression. `configured` applies the shared modifiers to both.
                     Group {
                         if useUnderlinedCell {
-                            PinEntryView(pin: $pin, length: length, isError: $isError, cell: UnderlinedPinCell.init)
-                                .pinAllowedEntry(allowedEntry)
-                                .pinSecure(isSecure)
-                                .pinFocused($isPinFocused)
+                            configured(PinEntryView(pin: $pin, length: length, isError: $isError, cell: UnderlinedPinCell.init))
                         } else {
-                            PinEntryView(pin: $pin, length: length, isError: $isError)
-                                .pinAllowedEntry(allowedEntry)
-                                .pinSecure(isSecure)
-                                .pinFocused($isPinFocused)
+                            configured(PinEntryView(pin: $pin, length: length, isError: $isError))
                         }
                     }
                     .onChange(of: pin) {
@@ -33,6 +32,11 @@ struct ContentView: View {
                         }
                     }
                     .padding(.vertical, 8)
+                    .phaseAnimator([0, -8, 8, -8, 8, 0], trigger: shakeTrigger) { content, offset in
+                        content.offset(x: reduceMotion ? 0 : offset)
+                    } animation: { _ in
+                        .easeInOut(duration: 0.06)
+                    }
 
                     Text("Entered: \(pin.isEmpty ? "—" : pin)")
                         .font(.footnote)
@@ -52,7 +56,10 @@ struct ContentView: View {
                 }
 
                 Section("Actions") {
-                    Button("Trigger error") { isError = true }
+                    Button("Trigger error") {
+                        isError = true
+                        shakeTrigger += 1
+                    }
                     Button("Clear") { pin = "" }
                     Button("Focus") { isPinFocused = true }
                 }
@@ -64,5 +71,12 @@ struct ContentView: View {
             }
             .navigationTitle("CBPinEntryView")
         }
+    }
+
+    private func configured<Cell: View>(_ view: PinEntryView<Cell>) -> some View {
+        view
+            .pinAllowedEntry(allowedEntry)
+            .pinSecure(isSecure)
+            .pinFocused($isPinFocused)
     }
 }
