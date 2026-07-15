@@ -18,6 +18,7 @@ public struct PinEntryView<CellContent: View>: View {
     private var textInputAutocapitalization: TextInputAutocapitalization = .never
     private var hapticEvents: PinEntryHapticEvents = .default
     private var externalFocus: FocusState<Bool>.Binding?
+    private var isPasteEnabled: Bool = true
 
     @FocusState private var internalFocus: Bool
     @ScaledMetric(relativeTo: .title2) private var minimumCellWidth: CGFloat = 44
@@ -260,6 +261,12 @@ extension PinEntryView {
     public func pinFocused(_ binding: FocusState<Bool>.Binding) -> Self {
         var copy = self
         copy.externalFocus = binding
+        return copy
+    }
+
+    public func pinPasteEnabled(_ enabled: Bool = true) -> Self {
+        var copy = self
+        copy.isPasteEnabled = enabled
         return copy
     }
 }
