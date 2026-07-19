@@ -52,7 +52,6 @@ PinEntryView(pin: $pin, length: 4, isError: $isError)
     .pinTextInputAutocapitalization(.never)
     .pinHaptics(.default)
     .pinFocused($isFocused)
-    .pinPasteEnabled(false)
 ```
 
 ### Custom cell rendering

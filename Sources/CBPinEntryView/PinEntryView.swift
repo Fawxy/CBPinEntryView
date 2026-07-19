@@ -18,7 +18,6 @@ public struct PinEntryView<CellContent: View>: View {
     private var textInputAutocapitalization: TextInputAutocapitalization = .never
     private var hapticEvents: PinEntryHapticEvents = .default
     private var externalFocus: FocusState<Bool>.Binding?
-    private var isPasteEnabled: Bool = true
 
     @FocusState private var internalFocus: Bool
     @ScaledMetric(relativeTo: .title2) private var minimumCellWidth: CGFloat = 44
@@ -72,11 +71,6 @@ public struct PinEntryView<CellContent: View>: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { effectiveFocusBinding.wrappedValue = true }
-        .contextMenu {
-            if isPasteEnabled, UIPasteboard.general.hasStrings {
-                Button("Paste") { performPaste() }
-            }
-        }
         .onAppear {
             previousPin = pin.wrappedValue
             if pin.wrappedValue != rawText {
@@ -127,12 +121,6 @@ public struct PinEntryView<CellContent: View>: View {
         }
     }
 
-    private func performPaste() {
-        guard let pasted = UIPasteboard.general.string else { return }
-        rawText += pasted
-        effectiveFocusBinding.wrappedValue = true
-    }
-
     private func equalWidthCellRow(visibleCharacters: [Character], isFocused: Bool) -> some View {
         HStack(spacing: spacing) {
             ForEach(0..<length, id: \.self) { index in
@@ -176,7 +164,9 @@ public struct PinEntryView<CellContent: View>: View {
         .focused(effectiveFocusBinding)
         .foregroundStyle(.clear)
         .tint(.clear)
-        .allowsHitTesting(false)
+        // Hit-testable (unlike the cell overlay above) so the field's own tap-on-caret
+        // and long-press interactions reach it, giving native paste for free.
+        .allowsHitTesting(true)
         .accessibilityLabel(accessibilityLabelText ?? String(localized: "PIN code"))
         .accessibilityValue(accessibilityValueText)
         .accessibilityHint(String(localized: "Enter your \(length)-digit code."))
@@ -272,12 +262,6 @@ extension PinEntryView {
     public func pinFocused(_ binding: FocusState<Bool>.Binding) -> Self {
         var copy = self
         copy.externalFocus = binding
-        return copy
-    }
-
-    public func pinPasteEnabled(_ enabled: Bool = true) -> Self {
-        var copy = self
-        copy.isPasteEnabled = enabled
         return copy
     }
 }
