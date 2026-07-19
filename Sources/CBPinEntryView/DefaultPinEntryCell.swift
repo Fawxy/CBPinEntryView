@@ -13,6 +13,8 @@ public struct DefaultPinEntryCell: View {
     var borderWidth: CGFloat
     var font: Font
 
+    @ScaledMetric(relativeTo: .title2) private var minimumHeight: CGFloat = 44
+
     public init(
         state: PinEntryCellState,
         backgroundColor: Color = Color(.secondarySystemBackground),
@@ -40,16 +42,17 @@ public struct DefaultPinEntryCell: View {
     }
 
     public var body: some View {
-        RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(currentBackgroundColor)
+        Text(state.character ?? "")
+            .font(font)
+            .foregroundStyle(textColor)
+            .frame(maxWidth: .infinity, minHeight: minimumHeight)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(currentBackgroundColor)
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .strokeBorder(currentBorderColor, lineWidth: currentBorderWidth)
-            )
-            .overlay(
-                Text(state.character ?? "")
-                    .font(font)
-                    .foregroundStyle(textColor)
             )
     }
 
