@@ -14,7 +14,7 @@ Example app: open `Example/Example.xcodeproj`, run the `Example` scheme (iOS 17+
 
 ## Architecture
 
-- One real, invisible-but-focusable `TextField`/`SecureField` is the single source of truth; the row of cells is a non-interactive overlay drawn from the current string. This is why backspace, paste, and `.oneTimeCode` autofill work for free — inherited from the real field, not reimplemented.
+- One real, invisible-but-focusable `TextField`/`SecureField` is the single source of truth; the row of cells is a non-interactive overlay drawn from the current string. This is why backspace and `.oneTimeCode` autofill work for free — inherited from the real field, not reimplemented. Paste is the exception: the overlay's tap gesture sits on top of the field and blocks its native long-press-to-paste menu, so `PinEntryView` adds its own `.contextMenu` (gated by `.pinPasteEnabled(_:)`, default `true`) rather than inheriting one.
 - All logic lives in `PinEntryReducer`: a pure function (no SwiftUI) tested directly — sanitise, truncate, completion detection, secure masking.
 - `PinEntryView` is a `Binding<String>`-driven `struct View`, recreated from the parent's state each render. The value *is* the state — no model, no imperative API, no `@Observable` in the control (that belongs in the consumer's feature model).
 
